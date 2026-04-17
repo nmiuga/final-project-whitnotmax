@@ -1,0 +1,59 @@
+{
+  "" : {
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final-project-primary.dia",
+    "emit-module-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final-project-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final-project-primary-emit-module.dia",
+    "pch" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final-project-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final-project-primary.swiftdeps"
+  },
+  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project/ContentView.swift" : {
+    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project/DirectionView.swift" : {
+    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.swiftconstvalues",
+    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.d",
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.dia",
+    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.o",
+    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.bc",
+    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.o",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView.swiftdeps",
+    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/DirectionView~partial.swiftmodule"
+  },
+  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project/LocationStore.swift" : {
+    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.swiftconstvalues",
+    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.d",
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.dia",
+    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.o",
+    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.bc",
+    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.o",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore.swiftdeps",
+    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/LocationStore~partial.swiftmodule"
+  },
+  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project/final_projectApp.swift" : {
+    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.swiftconstvalues",
+    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.d",
+    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.dia",
+    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.o",
+    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.bc",
+    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.o",
+    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp.swiftdeps",
+    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/final-project.build/Objects-normal/arm64/final_projectApp~partial.swiftmodule"
+  }
+}

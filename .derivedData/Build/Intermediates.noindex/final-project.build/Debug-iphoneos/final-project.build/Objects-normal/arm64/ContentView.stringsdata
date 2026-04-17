@@ -1,0 +1,104 @@
+{
+  "source": "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "PinPoint",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 81
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save your spot in one tap, then come back and let the app guide you back.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "Guide Me",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save This Location",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "Update Saved Location",
+        "location": {
+          "startingColumn": 79,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "Refresh",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 192
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saved Spot",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "You are currently %@ away.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 216
+        }
+      },
+      {
+        "comment": "",
+        "key": "Open in Apple Maps",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "No saved spot yet",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "When you park, open the app and tap Save This Location. PinPoint will remember the exact spot so you can walk back later.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 245
+        }
+      }
+    ]
+  },
+  "version": 1
+}

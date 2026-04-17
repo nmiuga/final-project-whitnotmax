@@ -1,0 +1,72 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "40d8f9c9478fdfd87b846d0f6af7d8d7e1171b757ed7491b8067a423e3b04db4"
+    }
+  ],
+  "containerPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/final-project.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos26.2",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "armv4t",
+        "armv5",
+        "armv6",
+        "armv7",
+        "armv7f",
+        "armv7s",
+        "armv7k",
+        "arm64",
+        "arm64e"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Products",
+      "derivedDataPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData",
+      "indexDataStoreFolderPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "CODE_SIGN_IDENTITY" : "",
+          "CODE_SIGNING_ALLOWED" : "NO",
+          "CODE_SIGNING_REQUIRED" : "NO"
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
