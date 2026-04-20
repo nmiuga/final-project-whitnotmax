@@ -9,20 +9,44 @@ import SwiftUI
 
 struct DirectionView: View {
     @EnvironmentObject private var locationStore: LocationStore
+    let spot: SavedSpot?
+
+    init(spot: SavedSpot? = nil) {
+        self.spot = spot
+    }
+
+    private var activeSpot: SavedSpot? {
+        // This screen can guide the user to either:
+        // 1. the quick-save parking spot, or
+        // 2. a specific place selected from the Places tab.
+        spot ?? locationStore.quickSpot
+    }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if locationStore.savedSpot == nil {
+                if activeSpot == nil {
                     ContentUnavailableView(
-                        "No Saved Spot",
+                        "No Saved Location",
                         systemImage: "parkingsign",
                         description: Text("Save a location first so PinPoint can guide you back.")
                     )
                     .padding(.top, 80)
                 } else {
                     compassCard
-                    stepsCard
+                    Button {
+                        if let activeSpot {
+                            locationStore.openInMaps(for: activeSpot)
+                        }
+                    } label: {
+                        Label("Open Turn-by-Turn in Apple Maps", systemImage: "map")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.black.opacity(0.85))
+                    .padding(.top, 6)
+                    
                 }
             }
             .padding(20)
@@ -66,18 +90,18 @@ struct DirectionView: View {
                 Image(systemName: "location.north.line.fill")
                     .font(.system(size: 88))
                     .foregroundStyle(.orange)
-                    // `arrowRotation` comes from `LocationStore`.
+                    // `arrowRotation(to:)` comes from `LocationStore`.
                     // It represents "how many degrees should this arrow rotate so it points toward
                     // the saved location, relative to the phone's current heading?"
-                    .rotationEffect(.degrees(locationStore.arrowRotation))
+                    .rotationEffect(.degrees(locationStore.arrowRotation(to: activeSpot)))
                     .shadow(color: .orange.opacity(0.25), radius: 12, y: 6)
             }
 
-            Text(locationStore.distanceText ?? "Locating...")
+            Text(locationStore.distanceText(to: activeSpot) ?? "Locating...")
                 .font(.system(size: 36, weight: .bold, design: .rounded))
                 .monospacedDigit()
 
-            Text(locationStore.directionHint ?? "Move a few steps so the compass can orient itself.")
+            Text(locationStore.directionHint(to: activeSpot) ?? "Move a few steps so the compass can orient itself.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
         }
@@ -86,30 +110,7 @@ struct DirectionView: View {
         .background(Color.white.opacity(0.78), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
     }
 
-    private var stepsCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Quick tips")
-                .font(.title3.weight(.bold))
-
-            Label("The arrow points toward your saved location, like an AirTag-style beacon.", systemImage: "arrow.up.circle")
-            Label("Distance updates as your GPS location refreshes.", systemImage: "figure.walk")
-            Label("If the heading feels off, rotate once or walk a few steps to help the compass recalibrate.", systemImage: "safari")
-
-            Button {
-                locationStore.openInMaps()
-            } label: {
-                Label("Open Turn-by-Turn in Apple Maps", systemImage: "map")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.black.opacity(0.85))
-            .padding(.top, 6)
-        }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(0.78), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
-    }
+    
 
     private func rotation(for label: String) -> Angle {
         // We keep the compass labels in one place in the view hierarchy and rotate them into position.

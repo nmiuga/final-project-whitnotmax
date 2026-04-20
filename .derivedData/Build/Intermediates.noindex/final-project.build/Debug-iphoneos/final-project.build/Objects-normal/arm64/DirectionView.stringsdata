@@ -7,7 +7,7 @@
         "key": "Guide Back",
         "location": {
           "startingColumn": 26,
-          "startingLine": 41
+          "startingLine": 65
         }
       },
       {
@@ -15,55 +15,23 @@
         "key": "Save a location first so PinPoint can guide you back.",
         "location": {
           "startingColumn": 43,
-          "startingLine": 20
+          "startingLine": 32
         }
       },
       {
         "comment": "",
-        "key": "No Saved Spot",
+        "key": "No Saved Location",
         "location": {
           "startingColumn": 25,
-          "startingLine": 18
-        }
-      },
-      {
-        "comment": "",
-        "key": "Quick tips",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 91
-        }
-      },
-      {
-        "comment": "",
-        "key": "The arrow points toward your saved location, like an AirTag-style beacon.",
-        "location": {
-          "startingColumn": 19,
-          "startingLine": 94
-        }
-      },
-      {
-        "comment": "",
-        "key": "Distance updates as your GPS location refreshes.",
-        "location": {
-          "startingColumn": 19,
-          "startingLine": 95
-        }
-      },
-      {
-        "comment": "",
-        "key": "If the heading feels off, rotate once or walk a few steps to help the compass recalibrate.",
-        "location": {
-          "startingColumn": 19,
-          "startingLine": 96
+          "startingLine": 30
         }
       },
       {
         "comment": "",
         "key": "Open Turn-by-Turn in Apple Maps",
         "location": {
-          "startingColumn": 23,
-          "startingLine": 101
+          "startingColumn": 31,
+          "startingLine": 42
         }
       }
     ]

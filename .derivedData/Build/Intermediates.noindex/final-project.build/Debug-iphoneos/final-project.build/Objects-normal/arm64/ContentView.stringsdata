@@ -4,10 +4,34 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Quick Save",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "Places",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
         "key": "PinPoint",
         "location": {
           "startingColumn": 30,
-          "startingLine": 81
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "Guide Me",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 96
         }
       },
       {
@@ -15,15 +39,7 @@
         "key": "Save your spot in one tap, then come back and let the app guide you back.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 98
-        }
-      },
-      {
-        "comment": "",
-        "key": "Guide Me",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 154
+          "startingLine": 150
         }
       },
       {
@@ -31,23 +47,15 @@
         "key": "Save This Location",
         "location": {
           "startingColumn": 56,
-          "startingLine": 170
+          "startingLine": 216
         }
       },
       {
         "comment": "",
-        "key": "Update Saved Location",
+        "key": "Update Quick Spot",
         "location": {
           "startingColumn": 79,
-          "startingLine": 170
-        }
-      },
-      {
-        "comment": "",
-        "key": "Refresh",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 183
+          "startingLine": 216
         }
       },
       {
@@ -55,36 +63,12 @@
         "key": "Clear",
         "location": {
           "startingColumn": 27,
-          "startingLine": 192
+          "startingLine": 230
         }
       },
       {
         "comment": "",
-        "key": "Saved Spot",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 205
-        }
-      },
-      {
-        "comment": "",
-        "key": "You are currently %@ away.",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 216
-        }
-      },
-      {
-        "comment": "",
-        "key": "Open in Apple Maps",
-        "location": {
-          "startingColumn": 23,
-          "startingLine": 229
-        }
-      },
-      {
-        "comment": "",
-        "key": "No saved spot yet",
+        "key": "Quick Spot",
         "location": {
           "startingColumn": 18,
           "startingLine": 243
@@ -92,10 +76,170 @@
       },
       {
         "comment": "",
+        "key": "You are currently %@ away.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 257
+        }
+      },
+      {
+        "comment": "",
         "key": "When you park, open the app and tap Save This Location. PinPoint will remember the exact spot so you can walk back later.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 245
+          "startingLine": 296
+        }
+      },
+      {
+        "comment": "",
+        "key": "No quick spot yet",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 277
+        }
+      },
+      {
+        "comment": "",
+        "key": "Places",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 403
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saved Places",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 379
+        }
+      },
+      {
+        "comment": "",
+        "key": "Use this tab for saved trailheads, meet-up points, parking decks, or any location you want to come back to later.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 342
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save Current Location",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 350
+        }
+      },
+      {
+        "comment": "",
+        "key": "Refresh",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 359
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save a few locations here so the app stays flexible without cluttering the quick-save experience.",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 374
+        }
+      },
+      {
+        "comment": "",
+        "key": "No Saved Places",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 372
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 388
+        }
+      },
+      {
+        "comment": "",
+        "key": "Maps",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 395
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save Place",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 534
+        }
+      },
+      {
+        "comment": "",
+        "key": "Place Name",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 498
+        }
+      },
+      {
+        "comment": "",
+        "key": "Icon",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 506
+        }
+      },
+      {
+        "comment": "",
+        "key": "Leave this empty to use the default pin icon. Tap Custom to jump to the emoji keyboard.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 523
+        }
+      },
+      {
+        "comment": "",
+        "key": "This saves your current GPS location into the Places tab so you can guide yourself back to it later.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 529
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 538
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 544
+        }
+      },
+      {
+        "comment": "",
+        "key": "Custom",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 593
+        }
+      },
+      {
+        "comment": "",
+        "key": "Default",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 608
         }
       }
     ]

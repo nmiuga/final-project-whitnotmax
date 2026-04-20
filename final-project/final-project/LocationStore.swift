@@ -20,7 +20,14 @@ final class LocationStore: NSObject, ObservableObject {
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
     @Published private(set) var currentLocation: CLLocation?
     @Published private(set) var currentHeading: CLHeading?
-    @Published var savedSpot: SavedSpot?
+
+    // `quickSpot` powers the "park now with one tap" workflow.
+    // It stays separate from the full places list so the fast flow stays simple.
+    @Published var quickSpot: SavedSpot?
+
+    // `savedPlaces` powers the more flexible second tab where users can keep multiple locations.
+    @Published private(set) var savedPlaces: [SavedSpot]
+
     @Published private(set) var statusMessage: String?
 
     // `CLLocationManager` is Apple's main GPS / compass manager.
@@ -28,24 +35,26 @@ final class LocationStore: NSObject, ObservableObject {
     // through delegate callbacks.
     private let locationManager = CLLocationManager()
 
-    // The saved parking spot is persisted in `UserDefaults` under this key
-    // so the app can restore it after closing and reopening.
-    private let storageKey = "savedSpot"
+    // We persist the quick-save spot and the multi-place list separately so each part of the UI
+    // can restore exactly what it needs when the app relaunches.
+    private let quickSpotStorageKey = "quickSpot"
+    private let savedPlacesStorageKey = "savedPlaces"
 
     override init() {
         // We capture the current authorization status immediately so the UI can render
         // the right state before the first delegate callback happens.
         authorizationStatus = locationManager.authorizationStatus
 
-        // If the user saved a location in a previous app session, restore it now.
-        savedSpot = SavedSpotStorage.load(forKey: storageKey)
+        // Restore any previously saved data so the app feels stateful across launches.
+        quickSpot = SavedSpotStorage.load(forKey: quickSpotStorageKey)
+        savedPlaces = SavedSpotStorage.loadArray(forKey: savedPlacesStorageKey)
         super.init()
 
         // The location manager sends updates back to this object via CLLocationManagerDelegate.
         locationManager.delegate = self
 
-        // "Nearest ten meters" is a reasonable tradeoff for a parked-car app:
-        // accurate enough to be useful, but not as battery-hungry as the most precise mode.
+        // "Nearest ten meters" is a reasonable tradeoff for this app:
+        // accurate enough to help someone find their car, without asking for maximum GPS cost.
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
 
         // Ignore tiny movement changes so we do not over-update the UI while the user is standing still.
@@ -56,10 +65,10 @@ final class LocationStore: NSObject, ObservableObject {
     }
 
     var canSaveCurrentLocation: Bool {
-        // The one-tap save button should only work once we both:
+        // The save actions should only work once we both:
         // 1. have permission, and
         // 2. actually have a GPS fix.
-        currentLocation != nil && isAuthorized
+        resolvedCurrentLocation != nil && isAuthorized
     }
 
     var isAuthorized: Bool {
@@ -85,11 +94,58 @@ final class LocationStore: NSObject, ObservableObject {
         isAuthorized ? "location.fill" : "location.slash"
     }
 
-    var distanceText: String? {
-        guard let currentLocation, let savedSpot else { return nil }
+    var shouldShowLocationNotice: Bool {
+        !isAuthorized || resolvedCurrentLocation == nil
+    }
+
+    var locationNoticeTitle: String {
+        switch authorizationStatus {
+        case .notDetermined:
+            return "Location Permission Needed"
+        case .denied:
+            return "Location Access Is Off"
+        case .restricted:
+            return "Location Is Restricted"
+        case .authorizedAlways, .authorizedWhenInUse:
+            return "Finding Your Location"
+        @unknown default:
+            return "Location Unavailable"
+        }
+    }
+
+    var locationNoticeMessage: String {
+        switch authorizationStatus {
+        case .notDetermined:
+            return "Allow location access so you can save this place and guide yourself back later."
+        case .denied:
+            return "Location access is currently set to Never for this app. Open Settings and switch it to While Using the App."
+        case .restricted:
+            return "This device is restricting location access, so PinPoint cannot save your current position right now."
+        case .authorizedAlways, .authorizedWhenInUse:
+            return "PinPoint is waiting for a GPS fix. This usually clears after a second or two outdoors."
+        @unknown default:
+            return "PinPoint cannot read your location yet."
+        }
+    }
+
+    var locationNoticeButtonTitle: String {
+        switch authorizationStatus {
+        case .notDetermined:
+            return "Allow Location"
+        case .denied, .restricted:
+            return "Open Settings"
+        case .authorizedAlways, .authorizedWhenInUse:
+            return "Refresh Location"
+        @unknown default:
+            return "Refresh Location"
+        }
+    }
+
+    func distanceText(to spot: SavedSpot?) -> String? {
+        guard let currentLocation, let spot else { return nil }
 
         // `distance(from:)` returns meters between the user's current position and the saved spot.
-        let meters = currentLocation.distance(from: savedSpot.location)
+        let meters = currentLocation.distance(from: spot.location)
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
         formatter.unitStyle = .medium
@@ -105,12 +161,12 @@ final class LocationStore: NSObject, ObservableObject {
         }
     }
 
-    var directionHint: String? {
-        guard let currentLocation, let savedSpot else { return nil }
+    func directionHint(to spot: SavedSpot?) -> String? {
+        guard let currentLocation, let spot else { return nil }
 
         // `bearing` is the compass direction from the current coordinate to the saved coordinate.
-        // Example: if the saved car is due east, this returns roughly 90 degrees.
-        let bearing = currentLocation.coordinate.bearing(to: savedSpot.coordinate)
+        // Example: if the saved place is due east, this returns roughly 90 degrees.
+        let bearing = currentLocation.coordinate.bearing(to: spot.coordinate)
 
         if let currentHeading {
             // `trueHeading` is the direction the top of the phone is currently facing.
@@ -124,13 +180,13 @@ final class LocationStore: NSObject, ObservableObject {
         return "Head \(cardinalDirection(for: bearing)) toward your saved spot."
     }
 
-    var arrowRotation: Double {
-        guard let currentLocation, let savedSpot else { return 0 }
+    func arrowRotation(to spot: SavedSpot?) -> Double {
+        guard let currentLocation, let spot else { return 0 }
 
         // Same idea as `directionHint`, but this value is used directly by the UI arrow.
         // We compute the destination bearing, subtract the phone heading, then normalize
         // the result so it always falls between 0 and 360 degrees.
-        let bearing = currentLocation.coordinate.bearing(to: savedSpot.coordinate)
+        let bearing = currentLocation.coordinate.bearing(to: spot.coordinate)
         let heading = currentHeading?.trueHeading ?? 0
         return normalizeDegrees(bearing - heading)
     }
@@ -144,6 +200,13 @@ final class LocationStore: NSObject, ObservableObject {
             locationManager.requestWhenInUseAuthorization()
             statusMessage = "Allow location access so PinPoint can save where you parked."
         } else if isAuthorized {
+            // Real devices often already have a recent cached location available even before the
+            // next delegate callback arrives. Copying it into published state makes the UI feel
+            // much more responsive after launch / foregrounding.
+            if currentLocation == nil, let cachedLocation = locationManager.location {
+                currentLocation = cachedLocation
+            }
+
             // If permission already exists, start location + heading updates immediately.
             startUpdating()
         } else if authorizationStatus == .denied {
@@ -157,50 +220,106 @@ final class LocationStore: NSObject, ObservableObject {
             return
         }
 
+        // Pull in the most recent system-known coordinate right away if one exists.
+        // This gives the save buttons something usable even if a fresh GPS callback has not
+        // arrived yet after the app comes back on screen.
+        if let cachedLocation = locationManager.location {
+            currentLocation = cachedLocation
+        }
+
         // `requestLocation()` asks for a one-time fresh location sample.
-        // We also restart heading updates in case the compass wasn't active yet.
+        // We also restart heading updates in case the compass was not active yet.
         locationManager.requestLocation()
         if CLLocationManager.headingAvailable() {
             locationManager.startUpdatingHeading()
         }
     }
 
-    func saveCurrentSpot() {
-        guard let currentLocation else {
-            statusMessage = "Waiting for your current location. Try Refresh in a moment."
+    func saveQuickSpot() {
+        guard let currentLocation = prepareLocationForSave() else {
             return
         }
 
-        // We convert the live CLLocation into a small codable model that is easy to store.
+        // The quick-save flow intentionally uses a fixed default name so the user can
+        // save with one tap and move on. No extra prompts, no extra friction.
         let spot = SavedSpot(
+            name: "Saved Spot",
+            iconEmoji: nil,
             latitude: currentLocation.coordinate.latitude,
             longitude: currentLocation.coordinate.longitude,
             timestamp: .now
         )
-        savedSpot = spot
+        quickSpot = spot
 
-        // Persist the saved spot so it survives app relaunches.
-        SavedSpotStorage.save(spot, forKey: storageKey)
-        statusMessage = "Saved your current position."
+        // Persist the quick spot so it survives app relaunches.
+        SavedSpotStorage.save(spot, forKey: quickSpotStorageKey)
+        statusMessage = "Saved your quick spot."
     }
 
-    func clearSavedSpot() {
-        savedSpot = nil
-        SavedSpotStorage.clear(forKey: storageKey)
-        statusMessage = "Saved spot cleared."
+    func clearQuickSpot() {
+        quickSpot = nil
+        SavedSpotStorage.clear(forKey: quickSpotStorageKey)
+        statusMessage = "Quick spot cleared."
     }
 
-    func openInMaps() {
-        guard let savedSpot else { return }
+    func saveCurrentLocationToPlaces(named rawName: String, iconEmoji rawIconEmoji: String) {
+        guard let currentLocation = prepareLocationForSave() else {
+            return
+        }
 
+        // The list-based flow is more flexible, so we accept a custom name.
+        // If the user leaves it blank, we generate a simple timestamp-based fallback.
+        let trimmedName = rawName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedIconEmoji = rawIconEmoji.trimmingCharacters(in: .whitespacesAndNewlines)
+        let spot = SavedSpot(
+            name: trimmedName.isEmpty ? defaultPlaceName() : trimmedName,
+            iconEmoji: trimmedIconEmoji.isEmpty ? nil : String(trimmedIconEmoji.prefix(1)),
+            latitude: currentLocation.coordinate.latitude,
+            longitude: currentLocation.coordinate.longitude,
+            timestamp: .now
+        )
+
+        // Insert at the top so the most recently added places are easiest to reach.
+        savedPlaces.insert(spot, at: 0)
+        SavedSpotStorage.saveArray(savedPlaces, forKey: savedPlacesStorageKey)
+        statusMessage = "Saved \(spot.name)."
+    }
+
+    func deleteSavedPlace(_ spot: SavedSpot) {
+        savedPlaces.removeAll { $0.id == spot.id }
+        SavedSpotStorage.saveArray(savedPlaces, forKey: savedPlacesStorageKey)
+        statusMessage = "Removed \(spot.name)."
+    }
+
+    func defaultPlaceName() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return "Saved Place \(formatter.string(from: .now))"
+    }
+
+    func openInMaps(for spot: SavedSpot) {
         // This creates a real Apple Maps destination from our saved coordinate.
         // The app can then hand off walking directions if the user wants a more
         // traditional navigation experience than the beacon-style UI.
-        let item = MKMapItem(location: savedSpot.location, address: nil)
-        item.name = savedSpot.name
+        let item = MKMapItem(location: spot.location, address: nil)
+        item.name = spot.name
         item.openInMaps(launchOptions: [
             MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking
         ])
+    }
+
+    func handleLocationNoticeAction() {
+        switch authorizationStatus {
+        case .notDetermined:
+            requestWhenInUsePermission()
+        case .denied, .restricted:
+            openAppSettings()
+        case .authorizedAlways, .authorizedWhenInUse:
+            refreshLocation()
+        @unknown default:
+            refreshLocation()
+        }
     }
 
     private func startUpdating() {
@@ -216,6 +335,39 @@ final class LocationStore: NSObject, ObservableObject {
             // Heading updates power the rotating arrow in the guidance screen.
             locationManager.startUpdatingHeading()
         }
+    }
+
+    private var resolvedCurrentLocation: CLLocation? {
+        currentLocation ?? locationManager.location
+    }
+
+    private func prepareLocationForSave() -> CLLocation? {
+        guard isAuthorized else {
+            requestWhenInUsePermission()
+            statusMessage = "Allow location access so PinPoint can save this place."
+            return nil
+        }
+
+        // Prefer the published location we already showed to SwiftUI, but fall back to the
+        // manager's most recent cached reading on real devices when that is all we have so far.
+        if let location = resolvedCurrentLocation {
+            if currentLocation == nil {
+                currentLocation = location
+            }
+            return location
+        }
+
+        // If nothing is available yet, proactively ask Core Location for a fresh sample so the
+        // next tap should succeed without the user needing to navigate away and back.
+        refreshLocation()
+        statusMessage = "Waiting for your current location. Give it a second and try again."
+        return nil
+    }
+
+    private func openAppSettings() {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+        guard UIApplication.shared.canOpenURL(settingsURL) else { return }
+        UIApplication.shared.open(settingsURL)
     }
 
     private func cardinalDirection(for degrees: Double) -> String {
@@ -273,8 +425,8 @@ extension LocationStore: CLLocationManagerDelegate {
 
         Task { @MainActor in
             currentLocation = location
-            if savedSpot != nil {
-                statusMessage = "Tracking your distance to the saved spot."
+            if quickSpot != nil || !savedPlaces.isEmpty {
+                statusMessage = "Tracking your distance to saved locations."
             } else {
                 statusMessage = "Current location updated."
             }
@@ -308,15 +460,40 @@ private enum SavedSpotStorage {
         UserDefaults.standard.set(data, forKey: key)
     }
 
+    static func loadArray(forKey key: String) -> [SavedSpot] {
+        guard let data = UserDefaults.standard.data(forKey: key),
+              let spots = try? JSONDecoder().decode([SavedSpot].self, from: data) else {
+            return []
+        }
+        return spots
+    }
+
+    static func saveArray(_ spots: [SavedSpot], forKey key: String) {
+        guard let data = try? JSONEncoder().encode(spots) else { return }
+        UserDefaults.standard.set(data, forKey: key)
+    }
+
     static func clear(forKey key: String) {
         UserDefaults.standard.removeObject(forKey: key)
     }
 }
 
-struct SavedSpot: Codable, Equatable {
+struct SavedSpot: Codable, Equatable, Identifiable {
+    let id: UUID
+    let name: String
+    let iconEmoji: String?
     let latitude: Double
     let longitude: Double
     let timestamp: Date
+
+    init(id: UUID = UUID(), name: String, iconEmoji: String?, latitude: Double, longitude: Double, timestamp: Date) {
+        self.id = id
+        self.name = name
+        self.iconEmoji = iconEmoji
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+    }
 
     var coordinate: CLLocationCoordinate2D {
         // Convenient bridge for MapKit and compass math.
@@ -326,10 +503,6 @@ struct SavedSpot: Codable, Equatable {
     var location: CLLocation {
         // Convenient bridge for distance calculations and MKMapItem creation.
         CLLocation(latitude: latitude, longitude: longitude)
-    }
-
-    var name: String {
-        "Saved Parking Spot"
     }
 
     var formattedTimestamp: String {
@@ -349,6 +522,7 @@ struct MapPinItem: Identifiable {
     let subtitle: String
     let coordinate: CLLocationCoordinate2D
     let tint: Color
+    let iconEmoji: String?
 }
 
 private extension CLLocationCoordinate2D {
