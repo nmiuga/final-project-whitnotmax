@@ -15,6 +15,9 @@ struct final_projectApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(locationStore)
+                .onOpenURL { url in
+                    locationStore.handleIncomingURL(url)
+                }
         }
     }
 }

@@ -10,9 +10,26 @@ import CoreLocation
 import MapKit
 import SwiftUI
 import Combine
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 @MainActor
 final class LocationStore: NSObject, ObservableObject {
+    enum AppTab: Hashable {
+        case quickSave
+        case places
+    }
+
+    private enum LaunchAction {
+        case saveQuickSpot
+        case guideQuickSpot
+    }
+
+    static let appGroupIdentifier = "group.whitmans.final-project"
+    static let quickSpotStorageKey = "quickSpot"
+    static let savedPlacesStorageKey = "savedPlaces"
+
     // MARK: Published state used by the SwiftUI views
     //
     // `@Published` means "tell SwiftUI to refresh any subscribed views when this value changes."
@@ -29,25 +46,29 @@ final class LocationStore: NSObject, ObservableObject {
     @Published private(set) var savedPlaces: [SavedSpot]
 
     @Published private(set) var statusMessage: String?
+    @Published var selectedTab: AppTab = .quickSave
+    @Published var activeGuidanceSpot: SavedSpot?
 
     // `CLLocationManager` is Apple's main GPS / compass manager.
     // It talks to the system, asks permission, and delivers location + heading updates
     // through delegate callbacks.
     private let locationManager = CLLocationManager()
+    private let storageDefaults: UserDefaults
 
     // We persist the quick-save spot and the multi-place list separately so each part of the UI
     // can restore exactly what it needs when the app relaunches.
-    private let quickSpotStorageKey = "quickSpot"
-    private let savedPlacesStorageKey = "savedPlaces"
+    private var pendingLaunchAction: LaunchAction?
 
     override init() {
+        storageDefaults = UserDefaults(suiteName: Self.appGroupIdentifier) ?? .standard
+
         // We capture the current authorization status immediately so the UI can render
         // the right state before the first delegate callback happens.
         authorizationStatus = locationManager.authorizationStatus
 
         // Restore any previously saved data so the app feels stateful across launches.
-        quickSpot = SavedSpotStorage.load(forKey: quickSpotStorageKey)
-        savedPlaces = SavedSpotStorage.loadArray(forKey: savedPlacesStorageKey)
+        quickSpot = SavedSpotStorage.load(forKey: Self.quickSpotStorageKey, defaults: storageDefaults)
+        savedPlaces = SavedSpotStorage.loadArray(forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
         super.init()
 
         // The location manager sends updates back to this object via CLLocationManagerDelegate.
@@ -252,14 +273,16 @@ final class LocationStore: NSObject, ObservableObject {
         quickSpot = spot
 
         // Persist the quick spot so it survives app relaunches.
-        SavedSpotStorage.save(spot, forKey: quickSpotStorageKey)
+        SavedSpotStorage.save(spot, forKey: Self.quickSpotStorageKey, defaults: storageDefaults)
         statusMessage = "Saved your quick spot."
+        reloadWidgetTimelines()
     }
 
     func clearQuickSpot() {
         quickSpot = nil
-        SavedSpotStorage.clear(forKey: quickSpotStorageKey)
+        SavedSpotStorage.clear(forKey: Self.quickSpotStorageKey, defaults: storageDefaults)
         statusMessage = "Quick spot cleared."
+        reloadWidgetTimelines()
     }
 
     func saveCurrentLocationToPlaces(named rawName: String, iconEmoji rawIconEmoji: String) {
@@ -281,13 +304,13 @@ final class LocationStore: NSObject, ObservableObject {
 
         // Insert at the top so the most recently added places are easiest to reach.
         savedPlaces.insert(spot, at: 0)
-        SavedSpotStorage.saveArray(savedPlaces, forKey: savedPlacesStorageKey)
+        SavedSpotStorage.saveArray(savedPlaces, forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
         statusMessage = "Saved \(spot.name)."
     }
 
     func deleteSavedPlace(_ spot: SavedSpot) {
         savedPlaces.removeAll { $0.id == spot.id }
-        SavedSpotStorage.saveArray(savedPlaces, forKey: savedPlacesStorageKey)
+        SavedSpotStorage.saveArray(savedPlaces, forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
         statusMessage = "Removed \(spot.name)."
     }
 
@@ -322,6 +345,30 @@ final class LocationStore: NSObject, ObservableObject {
         }
     }
 
+    func handleIncomingURL(_ url: URL) {
+        guard url.scheme == "pinpoint" else { return }
+
+        let action = url.host ?? url.pathComponents.dropFirst().first ?? ""
+        switch action {
+        case "save-quick":
+            selectedTab = .quickSave
+            pendingLaunchAction = .saveQuickSpot
+        case "guide-quick":
+            selectedTab = .quickSave
+            pendingLaunchAction = .guideQuickSpot
+        default:
+            return
+        }
+
+        processPendingLaunchAction()
+    }
+
+    func handleAppBecameActive() {
+        requestWhenInUsePermission()
+        refreshLocation()
+        processPendingLaunchAction()
+    }
+
     private func startUpdating() {
         // `startUpdatingLocation()` keeps the GPS stream alive so distance changes
         // update automatically as the user walks.
@@ -334,6 +381,42 @@ final class LocationStore: NSObject, ObservableObject {
         if CLLocationManager.headingAvailable() {
             // Heading updates power the rotating arrow in the guidance screen.
             locationManager.startUpdatingHeading()
+        }
+    }
+
+    private func processPendingLaunchAction() {
+        guard let pendingLaunchAction else { return }
+
+        switch pendingLaunchAction {
+        case .saveQuickSpot:
+            guard isAuthorized else {
+                requestWhenInUsePermission()
+                statusMessage = "Allow location access so PinPoint can save your quick spot."
+                return
+            }
+
+            guard let location = resolvedCurrentLocation else {
+                refreshLocation()
+                statusMessage = "Opening PinPoint and looking for your current location."
+                return
+            }
+
+            if currentLocation == nil {
+                currentLocation = location
+            }
+
+            saveQuickSpot()
+            self.pendingLaunchAction = nil
+
+        case .guideQuickSpot:
+            guard let quickSpot else {
+                statusMessage = "Save a quick spot first so PinPoint has somewhere to guide you."
+                self.pendingLaunchAction = nil
+                return
+            }
+
+            activeGuidanceSpot = quickSpot
+            self.pendingLaunchAction = nil
         }
     }
 
@@ -368,6 +451,12 @@ final class LocationStore: NSObject, ObservableObject {
         guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
         guard UIApplication.shared.canOpenURL(settingsURL) else { return }
         UIApplication.shared.open(settingsURL)
+    }
+
+    private func reloadWidgetTimelines() {
+#if canImport(WidgetKit)
+        WidgetCenter.shared.reloadAllTimelines()
+#endif
     }
 
     private func cardinalDirection(for degrees: Double) -> String {
@@ -415,6 +504,8 @@ extension LocationStore: CLLocationManagerDelegate {
             } else if manager.authorizationStatus == .denied {
                 statusMessage = "Location access is denied. Enable it in Settings to use PinPoint."
             }
+
+            processPendingLaunchAction()
         }
     }
 
@@ -430,6 +521,8 @@ extension LocationStore: CLLocationManagerDelegate {
             } else {
                 statusMessage = "Current location updated."
             }
+
+            processPendingLaunchAction()
         }
     }
 
@@ -448,37 +541,37 @@ extension LocationStore: CLLocationManagerDelegate {
 }
 
 private enum SavedSpotStorage {
-    static func load(forKey key: String) -> SavedSpot? {
+    static func load(forKey key: String, defaults: UserDefaults = .standard) -> SavedSpot? {
         // Decode the saved JSON blob from UserDefaults back into our Swift model.
-        guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
+        guard let data = defaults.data(forKey: key) else { return nil }
         return try? JSONDecoder().decode(SavedSpot.self, from: data)
     }
 
-    static func save(_ spot: SavedSpot, forKey key: String) {
+    static func save(_ spot: SavedSpot, forKey key: String, defaults: UserDefaults = .standard) {
         // Encode the model as JSON because CLLocationCoordinate2D itself is not directly stored in UserDefaults.
         guard let data = try? JSONEncoder().encode(spot) else { return }
-        UserDefaults.standard.set(data, forKey: key)
+        defaults.set(data, forKey: key)
     }
 
-    static func loadArray(forKey key: String) -> [SavedSpot] {
-        guard let data = UserDefaults.standard.data(forKey: key),
+    static func loadArray(forKey key: String, defaults: UserDefaults = .standard) -> [SavedSpot] {
+        guard let data = defaults.data(forKey: key),
               let spots = try? JSONDecoder().decode([SavedSpot].self, from: data) else {
             return []
         }
         return spots
     }
 
-    static func saveArray(_ spots: [SavedSpot], forKey key: String) {
+    static func saveArray(_ spots: [SavedSpot], forKey key: String, defaults: UserDefaults = .standard) {
         guard let data = try? JSONEncoder().encode(spots) else { return }
-        UserDefaults.standard.set(data, forKey: key)
+        defaults.set(data, forKey: key)
     }
 
-    static func clear(forKey key: String) {
-        UserDefaults.standard.removeObject(forKey: key)
+    static func clear(forKey key: String, defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: key)
     }
 }
 
-struct SavedSpot: Codable, Equatable, Identifiable {
+struct SavedSpot: Codable, Equatable, Hashable, Identifiable {
     let id: UUID
     let name: String
     let iconEmoji: String?

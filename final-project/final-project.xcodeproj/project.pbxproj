@@ -6,14 +6,65 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B0878F412F9929CD00E78424 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0878F402F9929CD00E78424 /* WidgetKit.framework */; };
+		B0878F432F9929CD00E78424 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0878F422F9929CD00E78424 /* SwiftUI.framework */; };
+		B0878F502F9929CE00E78424 /* PinPointWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B0878F3E2F9929CD00E78424 /* PinPointWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B0878F4E2F9929CE00E78424 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B007361C2F8D509600397982 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0878F3D2F9929CD00E78424;
+			remoteInfo = PinPointWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B0878F552F9929CE00E78424 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B0878F502F9929CE00E78424 /* PinPointWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		B00736242F8D509600397982 /* final-project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "final-project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B00736242F8D509600397982 /* PinPoint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinPoint.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0878F3E2F9929CD00E78424 /* PinPointWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinPointWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0878F402F9929CD00E78424 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B0878F422F9929CD00E78424 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B0878F512F9929CE00E78424 /* Exceptions for "PinPointWidget" folder in "PinPointWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B0878F3D2F9929CD00E78424 /* PinPointWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B00736262F8D509600397982 /* final-project */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "final-project";
+			sourceTree = "<group>";
+		};
+		B0878F442F9929CD00E78424 /* PinPointWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B0878F512F9929CE00E78424 /* Exceptions for "PinPointWidget" folder in "PinPointWidgetExtension" target */,
+			);
+			path = PinPointWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,6 +77,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0878F3B2F9929CD00E78424 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0878F432F9929CD00E78424 /* SwiftUI.framework in Frameworks */,
+				B0878F412F9929CD00E78424 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -33,6 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				B00736262F8D509600397982 /* final-project */,
+				B0878F442F9929CD00E78424 /* PinPointWidget */,
+				B0878F3F2F9929CD00E78424 /* Frameworks */,
 				B00736252F8D509600397982 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,9 +102,19 @@
 		B00736252F8D509600397982 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B00736242F8D509600397982 /* final-project.app */,
+				B00736242F8D509600397982 /* PinPoint.app */,
+				B0878F3E2F9929CD00E78424 /* PinPointWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B0878F3F2F9929CD00E78424 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B0878F402F9929CD00E78424 /* WidgetKit.framework */,
+				B0878F422F9929CD00E78424 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +127,12 @@
 				B00736202F8D509600397982 /* Sources */,
 				B00736212F8D509600397982 /* Frameworks */,
 				B00736222F8D509600397982 /* Resources */,
+				B0878F552F9929CE00E78424 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B0878F4F2F9929CE00E78424 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B00736262F8D509600397982 /* final-project */,
@@ -67,8 +141,30 @@
 			packageProductDependencies = (
 			);
 			productName = "final-project";
-			productReference = B00736242F8D509600397982 /* final-project.app */;
+			productReference = B00736242F8D509600397982 /* PinPoint.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B0878F3D2F9929CD00E78424 /* PinPointWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0878F522F9929CE00E78424 /* Build configuration list for PBXNativeTarget "PinPointWidgetExtension" */;
+			buildPhases = (
+				B0878F3A2F9929CD00E78424 /* Sources */,
+				B0878F3B2F9929CD00E78424 /* Frameworks */,
+				B0878F3C2F9929CD00E78424 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B0878F442F9929CD00E78424 /* PinPointWidget */,
+			);
+			name = PinPointWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = PinPointWidgetExtension;
+			productReference = B0878F3E2F9929CD00E78424 /* PinPointWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +177,9 @@
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					B00736232F8D509600397982 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					B0878F3D2F9929CD00E78424 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
@@ -100,12 +199,20 @@
 			projectRoot = "";
 			targets = (
 				B00736232F8D509600397982 /* final-project */,
+				B0878F3D2F9929CD00E78424 /* PinPointWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B00736222F8D509600397982 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0878F3C2F9929CD00E78424 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +229,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0878F3A2F9929CD00E78424 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B0878F4F2F9929CE00E78424 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0878F3D2F9929CD00E78424 /* PinPointWidgetExtension */;
+			targetProxy = B0878F4E2F9929CE00E78424 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B007362D2F8D509600397982 /* Debug */ = {
@@ -251,12 +373,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "final-project/final-project.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W5ZN7N78G3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = PinPoint;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleTypeRole = Editor;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleURLName = PinPoint;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleURLSchemes_0 = pinpoint;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PinPoint needs your location to save where you parked and guide you back later.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -285,12 +411,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "final-project/final-project.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W5ZN7N78G3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = PinPoint;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleTypeRole = Editor;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleURLName = PinPoint;
+				INFOPLIST_KEY_CFBundleURLTypes_0_CFBundleURLSchemes_0 = pinpoint;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PinPoint needs your location to save where you parked and guide you back later.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -307,6 +437,70 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B0878F532F9929CE00E78424 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PinPointWidget/PinPointWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W5ZN7N78G3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinPointWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PinPointWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "whitmans.final-project.PinPointWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B0878F542F9929CE00E78424 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PinPointWidget/PinPointWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W5ZN7N78G3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinPointWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PinPointWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "whitmans.final-project.PinPointWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -331,6 +525,15 @@
 			buildConfigurations = (
 				B00736302F8D509600397982 /* Debug */,
 				B00736312F8D509600397982 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0878F522F9929CE00E78424 /* Build configuration list for PBXNativeTarget "PinPointWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0878F532F9929CE00E78424 /* Debug */,
+				B0878F542F9929CE00E78424 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

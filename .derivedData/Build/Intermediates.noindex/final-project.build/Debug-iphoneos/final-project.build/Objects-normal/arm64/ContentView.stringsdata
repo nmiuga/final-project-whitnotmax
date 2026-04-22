@@ -7,7 +7,7 @@
         "key": "Quick Save",
         "location": {
           "startingColumn": 27,
-          "startingLine": 21
+          "startingLine": 22
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Places",
         "location": {
           "startingColumn": 27,
-          "startingLine": 26
+          "startingLine": 28
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "PinPoint",
         "location": {
           "startingColumn": 30,
-          "startingLine": 109
+          "startingLine": 117
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Guide Me",
         "location": {
           "startingColumn": 35,
-          "startingLine": 97
+          "startingLine": 105
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Save your spot in one tap, then come back and let the app guide you back.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 165
+          "startingLine": 176
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "Save This Location",
         "location": {
           "startingColumn": 56,
-          "startingLine": 233
+          "startingLine": 244
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "Update Quick Spot",
         "location": {
           "startingColumn": 79,
-          "startingLine": 233
+          "startingLine": 244
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Clear",
         "location": {
           "startingColumn": 27,
-          "startingLine": 251
+          "startingLine": 262
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "Quick Spot",
         "location": {
           "startingColumn": 18,
-          "startingLine": 264
+          "startingLine": 275
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "You are currently %@ away.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 278
+          "startingLine": 289
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "When you park, open the app and tap Save This Location. PinPoint will remember the exact spot so you can walk back later.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 317
+          "startingLine": 328
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "No quick spot yet",
         "location": {
           "startingColumn": 22,
-          "startingLine": 298
+          "startingLine": 309
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "Places",
         "location": {
           "startingColumn": 30,
-          "startingLine": 422
+          "startingLine": 433
         }
       },
       {
@@ -111,7 +111,7 @@
         "key": "Saved Places",
         "location": {
           "startingColumn": 29,
-          "startingLine": 398
+          "startingLine": 409
         }
       },
       {
@@ -119,7 +119,7 @@
         "key": "Use this tab for saved trailheads, meet-up points, parking decks, or any location you want to come back to later.",
         "location": {
           "startingColumn": 30,
-          "startingLine": 364
+          "startingLine": 375
         }
       },
       {
@@ -127,7 +127,7 @@
         "key": "Save Current Location",
         "location": {
           "startingColumn": 35,
-          "startingLine": 371
+          "startingLine": 382
         }
       },
       {
@@ -135,7 +135,7 @@
         "key": "Save a few locations here so the app stays flexible without cluttering the quick-save experience.",
         "location": {
           "startingColumn": 47,
-          "startingLine": 393
+          "startingLine": 404
         }
       },
       {
@@ -143,7 +143,7 @@
         "key": "No Saved Places",
         "location": {
           "startingColumn": 29,
-          "startingLine": 391
+          "startingLine": 402
         }
       },
       {
@@ -151,7 +151,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 43,
-          "startingLine": 407
+          "startingLine": 418
         }
       },
       {
@@ -159,7 +159,7 @@
         "key": "Maps",
         "location": {
           "startingColumn": 43,
-          "startingLine": 414
+          "startingLine": 425
         }
       },
       {
@@ -167,7 +167,7 @@
         "key": "Save Place",
         "location": {
           "startingColumn": 30,
-          "startingLine": 574
+          "startingLine": 585
         }
       },
       {
@@ -175,7 +175,7 @@
         "key": "Place Name",
         "location": {
           "startingColumn": 25,
-          "startingLine": 538
+          "startingLine": 549
         }
       },
       {
@@ -183,7 +183,7 @@
         "key": "Icon",
         "location": {
           "startingColumn": 25,
-          "startingLine": 546
+          "startingLine": 557
         }
       },
       {
@@ -191,7 +191,7 @@
         "key": "Leave this empty to use the default pin icon. Tap Custom to jump to the emoji keyboard.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 563
+          "startingLine": 574
         }
       },
       {
@@ -199,7 +199,7 @@
         "key": "This saves your current GPS location into the Places tab so you can guide yourself back to it later.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 569
+          "startingLine": 580
         }
       },
       {
@@ -207,7 +207,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 28,
-          "startingLine": 578
+          "startingLine": 589
         }
       },
       {
@@ -215,7 +215,7 @@
         "key": "Save",
         "location": {
           "startingColumn": 28,
-          "startingLine": 584
+          "startingLine": 595
         }
       },
       {
@@ -223,7 +223,7 @@
         "key": "Custom",
         "location": {
           "startingColumn": 30,
-          "startingLine": 638
+          "startingLine": 649
         }
       },
       {
@@ -231,7 +231,7 @@
         "key": "Default",
         "location": {
           "startingColumn": 30,
-          "startingLine": 653
+          "startingLine": 664
         }
       }
     ]

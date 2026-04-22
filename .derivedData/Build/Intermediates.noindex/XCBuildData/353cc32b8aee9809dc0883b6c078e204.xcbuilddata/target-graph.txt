@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'final-project' in project 'final-project'
+➜ Explicit dependency on target 'PinPointWidgetExtension' in project 'final-project'
+Target 'PinPointWidgetExtension' in project 'final-project' (no dependencies)

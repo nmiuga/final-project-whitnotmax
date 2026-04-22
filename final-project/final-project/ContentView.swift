@@ -15,13 +15,15 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        TabView {
+        TabView(selection: $locationStore.selectedTab) {
             QuickSaveView()
+                .tag(LocationStore.AppTab.quickSave)
                 .tabItem {
                     Label("Quick Save", systemImage: "mappin.circle.fill")
                 }
 
             SavedPlacesView()
+                .tag(LocationStore.AppTab.places)
                 .tabItem {
                     Label("Places", systemImage: "list.bullet.rectangle")
                 }
@@ -30,8 +32,7 @@ struct ContentView: View {
             if scenePhase == .active {
                 // When the app returns to the foreground on a real phone, ask Core Location
                 // for a fresh reading again so the save buttons are ready right away.
-                locationStore.requestWhenInUsePermission()
-                locationStore.refreshLocation()
+                locationStore.handleAppBecameActive()
             }
         }
     }
@@ -70,6 +71,13 @@ struct QuickSaveView: View {
         }
 
         return items
+    }
+
+    private var activeGuidanceSpotBinding: Binding<SavedSpot?> {
+        Binding(
+            get: { locationStore.activeGuidanceSpot },
+            set: { locationStore.activeGuidanceSpot = $0 }
+        )
     }
 
     var body: some View {
@@ -128,6 +136,9 @@ struct QuickSaveView: View {
                     }
                 }
                 syncRegion()
+            }
+            .navigationDestination(item: activeGuidanceSpotBinding) { spot in
+                DirectionView(spot: spot)
             }
         }
     }
