@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DirectionView: View {
     @EnvironmentObject private var locationStore: LocationStore
+    @Environment(\.colorScheme) private var colorScheme
     let spot: SavedSpot?
 
     init(spot: SavedSpot? = nil) {
@@ -44,26 +45,36 @@ struct DirectionView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.black.opacity(0.85))
+                    .tint(Color.accentColor)
                     .padding(.top, 6)
                     
                 }
             }
             .padding(20)
         }
-        .background(
-            LinearGradient(
-                colors: [
-                    Color(red: 0.98, green: 0.95, blue: 0.90),
-                    Color(red: 0.91, green: 0.94, blue: 0.98)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-        )
+        .background(screenBackground.ignoresSafeArea())
         .navigationTitle("Guide Back")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var screenBackground: some View {
+        LinearGradient(
+            colors: colorScheme == .dark
+            ? [
+                Color(red: 0.11, green: 0.10, blue: 0.08),
+                Color(red: 0.08, green: 0.10, blue: 0.14)
+            ]
+            : [
+                Color(red: 0.98, green: 0.95, blue: 0.90),
+                Color(red: 0.91, green: 0.94, blue: 0.98)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    private var cardFillColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.08) : Color.white.opacity(0.78)
     }
 
     private var compassCard: some View {
@@ -74,7 +85,7 @@ struct DirectionView: View {
                     .frame(width: 260, height: 260)
 
                 Circle()
-                    .stroke(Color.white.opacity(0.8), lineWidth: 18)
+                    .stroke(colorScheme == .dark ? Color.white.opacity(0.18) : Color.white.opacity(0.8), lineWidth: 18)
                     .frame(width: 220, height: 220)
 
                 ForEach(["N", "E", "S", "W"], id: \.self) { label in
@@ -107,7 +118,7 @@ struct DirectionView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity)
-        .background(Color.white.opacity(0.78), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .background(cardFillColor, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
     }
 
     

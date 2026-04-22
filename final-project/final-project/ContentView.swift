@@ -39,6 +39,7 @@ struct ContentView: View {
 
 struct QuickSaveView: View {
     @EnvironmentObject private var locationStore: LocationStore
+    @Environment(\.colorScheme) private var colorScheme
     @State private var isEmptyStateDismissed = false
 
     // `Map` in newer SwiftUI APIs is driven by a camera position instead of only a region binding.
@@ -98,23 +99,13 @@ struct QuickSaveView: View {
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(.black)
+                        .tint(Color.accentColor)
                     }
                 }
                 .padding(20)
                 .animation(.spring(response: 0.4, dampingFraction: 0.85), value: shouldShowEmptyStateCard)
             }
-            .background(
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.95, green: 0.97, blue: 0.99),
-                        Color(red: 0.88, green: 0.92, blue: 0.97)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-            )
+            .background(screenBackground.ignoresSafeArea())
             .navigationTitle("PinPoint")
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
@@ -143,6 +134,30 @@ struct QuickSaveView: View {
 
     private var shouldShowEmptyStateCard: Bool {
         locationStore.quickSpot == nil && !isEmptyStateDismissed
+    }
+
+    private var screenBackground: some View {
+        LinearGradient(
+            colors: colorScheme == .dark
+            ? [
+                Color(red: 0.10, green: 0.12, blue: 0.16),
+                Color(red: 0.07, green: 0.09, blue: 0.13)
+            ]
+            : [
+                Color(red: 0.95, green: 0.97, blue: 0.99),
+                Color(red: 0.88, green: 0.92, blue: 0.97)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    private var cardFillColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.08) : Color.white.opacity(0.78)
+    }
+
+    private var subtleControlFill: Color {
+        colorScheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.06)
     }
 
     private var headerCard: some View {
@@ -241,7 +256,7 @@ struct QuickSaveView: View {
             }
         }
         .padding(20)
-        .background(Color.white.opacity(0.75), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(cardFillColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private func quickSpotCard(_ spot: SavedSpot) -> some View {
@@ -274,7 +289,7 @@ struct QuickSaveView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(cardFillColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private var dismissibleEmptyStateCard: some View {
@@ -294,7 +309,7 @@ struct QuickSaveView: View {
                         .font(.caption.weight(.bold))
                         .foregroundStyle(.secondary)
                         .frame(width: 28, height: 28)
-                        .background(Color.black.opacity(0.06), in: Circle())
+                        .background(subtleControlFill, in: Circle())
                 }
                 .buttonStyle(.plain)
             }
@@ -304,7 +319,7 @@ struct QuickSaveView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .background(cardFillColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private func syncRegion() {
@@ -333,6 +348,7 @@ struct QuickSaveView: View {
 
 struct SavedPlacesView: View {
     @EnvironmentObject private var locationStore: LocationStore
+    @Environment(\.colorScheme) private var colorScheme
     @State private var isPresentingAddSheet = false
 
     var body: some View {
@@ -349,25 +365,21 @@ struct SavedPlacesView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
 
-                        HStack(spacing: 12) {
-                            Button {
-                                isPresentingAddSheet = true
-                            } label: {
-                                Label("Save Current Location", systemImage: "plus.circle.fill")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(locationStore.canSaveCurrentLocation ? .accentColor : .gray)
-                            .disabled(!locationStore.canSaveCurrentLocation)
-
-                            Button {
-                                locationStore.refreshLocation()
-                            } label: {
-                                Label("Refresh", systemImage: "arrow.clockwise")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.bordered)
+                        Button {
+                            isPresentingAddSheet = true
+                        } label: {
+                            Label("Save Current Location", systemImage: "mappin.circle.fill")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    locationStore.canSaveCurrentLocation ? Color.accentColor : Color.gray.opacity(0.35),
+                                    in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                )
+                                .foregroundStyle(locationStore.canSaveCurrentLocation ? .white : .secondary)
+                                .opacity(locationStore.canSaveCurrentLocation ? 1 : 0.9)
                         }
+                        .disabled(!locationStore.canSaveCurrentLocation)
                     }
                     .padding(.vertical, 4)
                     .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
@@ -408,6 +420,23 @@ struct SavedPlacesView: View {
                 }
             }
             .navigationTitle("Places")
+            .scrollContentBackground(.hidden)
+            .background(
+                LinearGradient(
+                    colors: colorScheme == .dark
+                    ? [
+                        Color(red: 0.10, green: 0.12, blue: 0.16),
+                        Color(red: 0.07, green: 0.09, blue: 0.13)
+                    ]
+                    : [
+                        Color(red: 0.95, green: 0.97, blue: 0.99),
+                        Color(red: 0.88, green: 0.92, blue: 0.97)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+            )
             .onAppear {
                 locationStore.requestWhenInUsePermission()
                 locationStore.refreshLocation()
@@ -459,6 +488,7 @@ struct SavedPlaceRow: View {
 
 struct LocationNoticeCard: View {
     @EnvironmentObject private var locationStore: LocationStore
+    @Environment(\.colorScheme) private var colorScheme
 
     var compact = false
 
@@ -482,11 +512,14 @@ struct LocationNoticeCard: View {
                 locationStore.handleLocationNoticeAction()
             }
             .buttonStyle(.borderedProminent)
-            .tint(.black)
+            .tint(Color.accentColor)
         }
         .padding(compact ? 16 : 20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(compact ? 0.9 : 0.82), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(
+            (colorScheme == .dark ? Color.white.opacity(0.10) : Color.white.opacity(compact ? 0.9 : 0.82)),
+            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        )
     }
 }
 
@@ -585,8 +618,13 @@ struct EmojiPaletteView: View {
     @Binding var selection: String
     let onCustomTap: () -> Void
     let onDefaultTap: () -> Void
+    @Environment(\.colorScheme) private var colorScheme
 
     private let emojis = ["📍", "🚗", "🏠", "🏕️", "🌲", "☕️", "🏫", "🛒", "🎯", "❤️", "⭐️", "🎵"]
+
+    private var tileFill: Color {
+        colorScheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.06)
+    }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -601,7 +639,7 @@ struct EmojiPaletteView: View {
                             .font(.caption2)
                     }
                     .frame(width: 58, height: 40)
-                    .background(Color.black.opacity(0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .background(tileFill, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
 
@@ -616,7 +654,7 @@ struct EmojiPaletteView: View {
                             .font(.caption2)
                     }
                     .frame(width: 58, height: 40)
-                    .background(Color.black.opacity(0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .background(tileFill, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.plain)
 
@@ -627,7 +665,7 @@ struct EmojiPaletteView: View {
                         Text(emoji)
                             .font(.title3)
                             .frame(width: 40, height: 40)
-                            .background(Color.black.opacity(0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .background(tileFill, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                     .buttonStyle(.plain)
                 }

@@ -7,7 +7,7 @@
         "key": "Guide Back",
         "location": {
           "startingColumn": 26,
-          "startingLine": 65
+          "startingLine": 56
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Save a location first so PinPoint can guide you back.",
         "location": {
           "startingColumn": 43,
-          "startingLine": 32
+          "startingLine": 33
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "No Saved Location",
         "location": {
           "startingColumn": 25,
-          "startingLine": 30
+          "startingLine": 31
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Open Turn-by-Turn in Apple Maps",
         "location": {
           "startingColumn": 31,
-          "startingLine": 42
+          "startingLine": 43
         }
       }
     ]
