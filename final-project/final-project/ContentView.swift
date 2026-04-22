@@ -206,7 +206,9 @@ struct QuickSaveView: View {
     }
 
     private var primaryActionCard: some View {
-        VStack(spacing: 14) {
+        let canSave = locationStore.canSaveCurrentLocation
+
+        return VStack(spacing: 14) {
             Button {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                     isEmptyStateDismissed = true
@@ -217,10 +219,14 @@ struct QuickSaveView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .foregroundStyle(.white)
+                    .background(
+                        canSave ? Color.accentColor : Color.gray.opacity(0.35),
+                        in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    )
+                    .foregroundStyle(canSave ? .white : .secondary)
+                    .opacity(canSave ? 1 : 0.9)
             }
-            .disabled(!locationStore.canSaveCurrentLocation)
+            .disabled(!canSave)
 
             HStack(spacing: 12) {
                 
@@ -351,6 +357,7 @@ struct SavedPlacesView: View {
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.borderedProminent)
+                            .tint(locationStore.canSaveCurrentLocation ? .accentColor : .gray)
                             .disabled(!locationStore.canSaveCurrentLocation)
 
                             Button {
@@ -636,7 +643,7 @@ struct SelectAllTextField: UIViewRepresentable {
     let placeholder: String
 
     func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField()
+        let textField = SelectAllOnAttachTextField()
         textField.borderStyle = .roundedRect
         textField.delegate = context.coordinator
         textField.placeholder = placeholder
@@ -649,12 +656,12 @@ struct SelectAllTextField: UIViewRepresentable {
             uiView.text = text
         }
 
-        if shouldFocus && uiView.window != nil && !uiView.isFirstResponder {
-            DispatchQueue.main.async {
-                uiView.becomeFirstResponder()
-                uiView.selectedTextRange = uiView.textRange(from: uiView.beginningOfDocument, to: uiView.endOfDocument)
-                shouldFocus = false
-            }
+        if let autoFocusTextField = uiView as? SelectAllOnAttachTextField {
+            autoFocusTextField.shouldAutoFocusOnAttach = shouldFocus
+        }
+
+        if shouldFocus && uiView.isFirstResponder {
+            shouldFocus = false
         }
     }
 
@@ -671,6 +678,26 @@ struct SelectAllTextField: UIViewRepresentable {
 
         @objc func textChanged(_ textField: UITextField) {
             text = textField.text ?? ""
+        }
+    }
+}
+
+final class SelectAllOnAttachTextField: UITextField {
+    var shouldAutoFocusOnAttach = false
+    private var hasAutoFocusedOnAttach = false
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        guard window != nil, shouldAutoFocusOnAttach, !hasAutoFocusedOnAttach else { return }
+        hasAutoFocusedOnAttach = true
+
+        // Request focus only once, right when the field has actually been attached to the
+        // presented sheet. This is much more reliable than racing SwiftUI update timing.
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.window != nil else { return }
+            self.becomeFirstResponder()
+            self.selectedTextRange = self.textRange(from: self.beginningOfDocument, to: self.endOfDocument)
         }
     }
 }

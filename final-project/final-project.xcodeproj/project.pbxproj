@@ -256,6 +256,7 @@
 				DEVELOPMENT_TEAM = W5ZN7N78G3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PinPoint;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PinPoint needs your location to save where you parked and guide you back later.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -268,7 +269,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "whitmans.final-project";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PinPoint;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -289,6 +290,7 @@
 				DEVELOPMENT_TEAM = W5ZN7N78G3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PinPoint;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PinPoint needs your location to save where you parked and guide you back later.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -301,7 +303,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "whitmans.final-project";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PinPoint;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;

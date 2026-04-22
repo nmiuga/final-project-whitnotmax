@@ -6,48 +6,6 @@
 	<integer>12</integer>
 	<key>logs</key>
 	<dict>
-		<key>1D1AE27B-C4B6-46B5-950D-22BE0716423A</key>
-		<dict>
-			<key>className</key>
-			<string>IDECommandLineBuildLog</string>
-			<key>documentTypeString</key>
-			<string>&lt;nil&gt;</string>
-			<key>domainType</key>
-			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
-			<key>fileName</key>
-			<string>1D1AE27B-C4B6-46B5-950D-22BE0716423A.xcactivitylog</string>
-			<key>hasPrimaryLog</key>
-			<true/>
-			<key>primaryObservable</key>
-			<dict>
-				<key>highLevelStatus</key>
-				<string>S</string>
-				<key>totalNumberOfAnalyzerIssues</key>
-				<integer>0</integer>
-				<key>totalNumberOfErrors</key>
-				<integer>0</integer>
-				<key>totalNumberOfTestFailures</key>
-				<integer>0</integer>
-				<key>totalNumberOfWarnings</key>
-				<integer>0</integer>
-			</dict>
-			<key>schemeIdentifier-containerName</key>
-			<string>final-project project</string>
-			<key>schemeIdentifier-schemeName</key>
-			<string>final-project</string>
-			<key>schemeIdentifier-sharedScheme</key>
-			<integer>1</integer>
-			<key>signature</key>
-			<string>Building project final-project with scheme final-project</string>
-			<key>timeStartedRecording</key>
-			<real>798396049.25235498</real>
-			<key>timeStoppedRecording</key>
-			<real>798396053.27173305</real>
-			<key>title</key>
-			<string>Building project final-project with scheme final-project</string>
-			<key>uniqueIdentifier</key>
-			<string>1D1AE27B-C4B6-46B5-950D-22BE0716423A</string>
-		</dict>
 		<key>BE1DB59D-579F-4FD0-8544-CFE0B671D880</key>
 		<dict>
 			<key>className</key>
