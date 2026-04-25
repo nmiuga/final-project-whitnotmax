@@ -97,70 +97,14 @@ private struct PinPointQuickSaveWidgetView: View {
     let entry: PinPointWidgetEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Image(systemName: "location.fill")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .padding(8)
-                    .background(Circle().fill(Color.accentColor))
-
-                Spacer()
-
-                Text("PinPoint")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer(minLength: 18)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Quick Save")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-
-                Text("Tap to save Quick Spot.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-                    .minimumScaleFactor(0.9)
-            }
-
-            Spacer(minLength: 14)
-
-            bottomStatus
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .pinPointWidgetBackground()
-    }
-
-    @ViewBuilder
-    private var bottomStatus: some View {
-        if let quickSpot = entry.quickSpot {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    WidgetSpotIcon(iconEmoji: quickSpot.iconEmoji)
-                    Text(quickSpot.name)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-
-                Text("Saved \(relativeTimestampText(for: quickSpot.timestamp))")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-            }
-        } else {
-            Text("No quick spot yet")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
+        PinPointWidgetCard(
+            headerSymbol: "location.fill",
+            headerTint: Color.accentColor,
+            headerText: "Quick Save",
+            title: "Quick Save",
+            subtitle: "Save your current spot."
+        ) {
+            statusBlock(for: entry.quickSpot, emptyText: "No quick spot yet")
         }
     }
 }
@@ -169,57 +113,68 @@ private struct PinPointGuideWidgetView: View {
     let entry: PinPointWidgetEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Image(systemName: "location.north.line.fill")
+        PinPointWidgetCard(
+            headerSymbol: "location.north.line.fill",
+            headerTint: .orange,
+            headerText: "Guide Me",
+            title: "Guide Me",
+            subtitle: entry.quickSpot == nil
+                ? "Save a quick spot first."
+                : "Open your saved spot."
+        ) {
+            statusBlock(for: entry.quickSpot, emptyText: "No quick spot yet")
+        }
+        .opacity(entry.quickSpot == nil ? 0.72 : 1)
+    }
+}
+
+private struct PinPointWidgetCard<StatusContent: View>: View {
+    let headerSymbol: String
+    let headerTint: Color
+    let headerText: String
+    let title: String
+    let subtitle: String
+    @ViewBuilder let statusContent: () -> StatusContent
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
+                Image(systemName: headerSymbol)
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(.white)
+                    .frame(width: 38, height: 38)
+                    .background(Circle().fill(headerTint))
 
                 Spacer()
 
-                Text("Guide")
+                Text(headerText)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(widgetSecondaryTextColor)
+                    .lineLimit(1)
             }
 
-            Spacer()
+            Spacer(minLength: 18)
 
-            if let quickSpot = entry.quickSpot {
-                Text("Guide Me")
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
                     .font(.headline)
                     .fontWeight(.bold)
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
 
-                HStack(spacing: 6) {
-                    WidgetSpotIcon(iconEmoji: quickSpot.iconEmoji)
-                    Text(quickSpot.name)
-                        .font(.subheadline)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-
-                Text("Saved \(relativeTimestampText(for: quickSpot.timestamp))")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-            } else {
-                Text("No Quick Spot")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-
-                Text("Save a quick spot in PinPoint first, then this widget will take you back to it.")
+                Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
+                    .foregroundStyle(widgetSecondaryTextColor)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.9)
             }
+
+            Spacer(minLength: 14)
+
+            statusContent()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .opacity(entry.quickSpot == nil ? 0.72 : 1)
         .pinPointWidgetBackground()
     }
 }
@@ -238,6 +193,37 @@ private struct WidgetSpotIcon: View {
         }
     }
 }
+
+@ViewBuilder
+private func statusBlock(for quickSpot: WidgetQuickSpot?, emptyText: String) -> some View {
+    if let quickSpot {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                WidgetSpotIcon(iconEmoji: quickSpot.iconEmoji)
+                    .frame(width: 18, alignment: .leading)
+
+                Text(quickSpot.name)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+
+            Text("Saved \(relativeTimestampText(for: quickSpot.timestamp))")
+                .font(.caption2)
+                .foregroundStyle(widgetSecondaryTextColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+        }
+    } else {
+        Text(emptyText)
+            .font(.caption2)
+            .foregroundStyle(widgetSecondaryTextColor)
+            .lineLimit(1)
+    }
+}
+
+private let widgetSecondaryTextColor = Color(uiColor: .secondaryLabel)
 
 private extension View {
     @ViewBuilder
