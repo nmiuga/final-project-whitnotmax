@@ -17,9 +17,9 @@ Key features include:
 
 
 <p align="center">
-  <img src="assets/screenshot1.png" alt="Guide screen" width="260">
-  <img src="assets/screenshot2.png" alt="Quick Save screen" width="260">
-  <img src="assets/screenshot3.png" alt="Places screen" width="260">
+  <img src="assets/screenshot1.png" alt="Guide screen" width="200">
+  <img src="assets/screenshot2.png" alt="Quick Save screen" width="200">
+  <img src="assets/screenshot3.png" alt="Places screen" width="200">
 </p>
 
 ## Setup
@@ -29,10 +29,4 @@ Key features include:
 3. Allow location access when prompted so PinPoint can save and guide to locations.
 4. If testing widgets, run the app once first and then add the widgets from the Home Screen widget gallery.
 
-## Project Structure
-
-- `final-project/` contains the Xcode project and app source code
-- `prompt.md` documents the AI prompt used to generate the initial version of the app
-- `edits.md` lists the manual changes made after generation
-- `reflection.md` contains a short reflection on the process
 
