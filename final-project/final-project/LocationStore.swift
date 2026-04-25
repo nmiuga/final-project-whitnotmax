@@ -53,6 +53,8 @@ final class LocationStore: NSObject, ObservableObject {
     @Published private(set) var statusMessage: String?
     @Published var selectedTab: AppTab = .quickSave
     @Published var activeGuidanceSpot: SavedSpot?
+    @Published private(set) var pendingSaveDescription: String?
+    @Published private(set) var successfulSaveCount = 0
 
     // `CLLocationManager` is Apple's main GPS / compass manager.
     // It talks to the system, asks permission, and delivers location + heading updates
@@ -95,6 +97,20 @@ final class LocationStore: NSObject, ObservableObject {
         authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways
     }
 
+    var isWaitingForQuickSave: Bool {
+        if case .quickSpot = pendingSaveRequest {
+            return true
+        }
+        return false
+    }
+
+    var isWaitingForPlaceSave: Bool {
+        if case .place = pendingSaveRequest {
+            return true
+        }
+        return false
+    }
+
     var authorizationLabel: String {
         switch authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -116,6 +132,10 @@ final class LocationStore: NSObject, ObservableObject {
 
     var shouldShowLocationNotice: Bool {
         !isAuthorized || resolvedCurrentLocation == nil
+    }
+
+    var shouldShowPlacesLocationNotice: Bool {
+        authorizationStatus == .denied || authorizationStatus == .restricted
     }
 
     var locationNoticeTitle: String {
@@ -197,6 +217,19 @@ final class LocationStore: NSObject, ObservableObject {
         let proximityThreshold = max(15.0, currentLocation.horizontalAccuracy)
         if meters <= proximityThreshold {
             return "You're Nearby"
+        }
+
+        return distanceText(to: spot)
+    }
+
+    func placesDistanceText(to spot: SavedSpot?) -> String? {
+        guard let currentLocation, let spot else { return nil }
+
+        let meters = currentLocation.distance(from: spot.location)
+        let proximityThreshold = max(15.0, currentLocation.horizontalAccuracy)
+
+        if meters <= proximityThreshold {
+            return "Nearby"
         }
 
         return distanceText(to: spot)
@@ -491,11 +524,12 @@ final class LocationStore: NSObject, ObservableObject {
         }
 
         pendingSaveRequest = request
+        pendingSaveDescription = savePendingDescription(for: request)
         locationManager.requestLocation()
         if CLLocationManager.headingAvailable() {
             locationManager.startUpdatingHeading()
         }
-        statusMessage = "Refreshing your location before saving."
+        statusMessage = pendingSaveDescription
     }
 
     private func commitSaveRequest(_ request: SaveRequest, with location: CLLocation) {
@@ -531,6 +565,9 @@ final class LocationStore: NSObject, ObservableObject {
             SavedSpotStorage.saveArray(savedPlaces, forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
             statusMessage = "Saved \(spot.name)."
         }
+
+        pendingSaveDescription = nil
+        successfulSaveCount += 1
     }
 
     private func isFreshEnoughForImmediateSave(_ location: CLLocation) -> Bool {
@@ -539,6 +576,15 @@ final class LocationStore: NSObject, ObservableObject {
         // immediately. If not, we wait for the next callback after the button press.
         let age = Date().timeIntervalSince(location.timestamp)
         return age <= 2 && location.horizontalAccuracy >= 0 && location.horizontalAccuracy <= 35
+    }
+
+    private func savePendingDescription(for request: SaveRequest) -> String {
+        switch request {
+        case .quickSpot:
+            return "Refreshing your location before saving your quick spot."
+        case let .place(name, _):
+            return "Refreshing your location before saving \(name)."
+        }
     }
 
     private func openAppSettings() {
@@ -644,6 +690,8 @@ extension LocationStore: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
+            pendingSaveRequest = nil
+            pendingSaveDescription = nil
             statusMessage = "Could not update your location: \(error.localizedDescription)"
         }
     }

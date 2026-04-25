@@ -36,82 +36,10 @@
       },
       {
         "comment": "",
-        "key": "PinPoint",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 110
-        }
-      },
-      {
-        "comment": "",
-        "key": "Quick Save",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 118
-        }
-      },
-      {
-        "comment": "",
-        "key": "Tap to save Quick Spot.",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 124
-        }
-      },
-      {
-        "comment": "",
-        "key": "No quick spot yet",
+        "key": "Saved %@",
         "location": {
           "startingColumn": 18,
-          "startingLine": 160
-        }
-      },
-      {
-        "comment": "",
-        "key": "Saved %@",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 153
-        }
-      },
-      {
-        "comment": "",
-        "key": "No Quick Spot",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 208
-        }
-      },
-      {
-        "comment": "",
-        "key": "Save a quick spot in PinPoint first, then this widget will take you back to it.",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 214
-        }
-      },
-      {
-        "comment": "",
-        "key": "Guide Me",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 188
-        }
-      },
-      {
-        "comment": "",
-        "key": "Saved %@",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 202
-        }
-      },
-      {
-        "comment": "",
-        "key": "Guide",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 180
+          "startingLine": 212
         }
       }
     ]

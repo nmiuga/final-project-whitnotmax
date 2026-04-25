@@ -241,18 +241,35 @@ struct QuickSaveView: View {
                 }
                 locationStore.saveQuickSpot()
             } label: {
-                Label(locationStore.quickSpot == nil ? "Save This Location" : "Update Quick Spot", systemImage: "mappin.circle.fill")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        canSave ? Color.accentColor : Color.gray.opacity(0.35),
-                        in: RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    )
-                    .foregroundStyle(canSave ? .white : .secondary)
-                    .opacity(canSave ? 1 : 0.9)
+                Group {
+                    if locationStore.isWaitingForQuickSave {
+                        HStack(spacing: 10) {
+                            ProgressView()
+                                .tint(.white)
+                            Text("Saving...")
+                        }
+                    } else {
+                        Label(locationStore.quickSpot == nil ? "Save This Location" : "Update Quick Spot", systemImage: "mappin.circle.fill")
+                    }
+                }
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(
+                    canSave ? Color.accentColor : Color.gray.opacity(0.35),
+                    in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+                )
+                .foregroundStyle(canSave ? .white : .secondary)
+                .opacity(canSave ? 1 : 0.9)
             }
-            .disabled(!canSave)
+            .disabled(!canSave || locationStore.isWaitingForQuickSave)
+
+            if locationStore.isWaitingForQuickSave, let pendingSaveDescription = locationStore.pendingSaveDescription {
+                Text(pendingSaveDescription)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
 
             HStack(spacing: 12) {
                 
@@ -388,9 +405,18 @@ struct SavedPlacesView: View {
                         .disabled(!locationStore.canSaveCurrentLocation)
                     }
                     .padding(.vertical, 4)
-                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                }
+                
+                if locationStore.shouldShowPlacesLocationNotice {
+                    Section {
+                        LocationNoticeCard()
+                            .listRowInsets(EdgeInsets())
+                    }
+                    .padding(0)
+                    
                 }
 
+               
                 if locationStore.savedPlaces.isEmpty {
                     Section {
                         ContentUnavailableView(
@@ -469,7 +495,7 @@ struct SavedPlaceRow: View {
                         .foregroundStyle(.primary)
                 }
                 Spacer()
-                if let distance = locationStore.distanceText(to: spot) {
+                if let distance = locationStore.placesDistanceText(to: spot) {
                     Text(distance)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.secondary)
@@ -531,6 +557,7 @@ struct AddPlaceSheet: View {
     @State private var shouldFocusNameField = false
     @State private var shouldFocusEmojiField = false
     @State private var shouldDismissEmojiField = false
+    @State private var saveCountWhenOpened = 0
 
     var body: some View {
         NavigationStack {
@@ -570,6 +597,16 @@ struct AddPlaceSheet: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+
+                if locationStore.isWaitingForPlaceSave {
+                    Section {
+                        HStack(spacing: 12) {
+                            ProgressView()
+                            Text(locationStore.pendingSaveDescription ?? "Refreshing your location before saving.")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
             }
             .navigationTitle("Save Place")
             .navigationBarTitleDisplayMode(.inline)
@@ -578,21 +615,26 @@ struct AddPlaceSheet: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .disabled(locationStore.isWaitingForPlaceSave)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         locationStore.saveCurrentLocationToPlaces(named: placeName, iconEmoji: placeEmoji)
-                        dismiss()
                     }
-                    .disabled(!locationStore.canSaveCurrentLocation)
+                    .disabled(!locationStore.canSaveCurrentLocation || locationStore.isWaitingForPlaceSave)
                 }
             }
             .onAppear {
                 if placeName.isEmpty {
                     placeName = locationStore.defaultPlaceName()
                 }
+                saveCountWhenOpened = locationStore.successfulSaveCount
                 shouldFocusNameField = true
+            }
+            .onChange(of: locationStore.successfulSaveCount) {
+                guard locationStore.successfulSaveCount > saveCountWhenOpened else { return }
+                dismiss()
             }
         }
     }

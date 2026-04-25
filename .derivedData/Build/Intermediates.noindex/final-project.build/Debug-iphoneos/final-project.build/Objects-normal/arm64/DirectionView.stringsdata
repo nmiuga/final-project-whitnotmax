@@ -7,7 +7,7 @@
         "key": "Guide Back",
         "location": {
           "startingColumn": 26,
-          "startingLine": 67
+          "startingLine": 84
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Save a location first so PinPoint can guide you back.",
         "location": {
           "startingColumn": 43,
-          "startingLine": 44
+          "startingLine": 55
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "No Saved Location",
         "location": {
           "startingColumn": 25,
-          "startingLine": 42
+          "startingLine": 53
         }
       },
       {
@@ -31,7 +31,23 @@
         "key": "Open Turn-by-Turn in Apple Maps",
         "location": {
           "startingColumn": 31,
-          "startingLine": 54
+          "startingLine": 70
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete Quick Spot",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete Saved Place",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 204
         }
       }
     ]

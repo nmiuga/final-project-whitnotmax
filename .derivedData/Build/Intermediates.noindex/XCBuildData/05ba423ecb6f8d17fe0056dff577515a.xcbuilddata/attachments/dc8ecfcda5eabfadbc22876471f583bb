@@ -35,15 +35,5 @@
     "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetBundle.o",
     "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetBundle.swiftdeps",
     "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetBundle~partial.swiftmodule"
-  },
-  "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/final-project/PinPointWidget/PinPointWidgetControl.swift" : {
-    "const-values" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.swiftconstvalues",
-    "dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.d",
-    "diagnostics" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.dia",
-    "index-unit-output-path" : "/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.o",
-    "llvm-bc" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.bc",
-    "object" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.o",
-    "swift-dependencies" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl.swiftdeps",
-    "swiftmodule" : "/Users/whitmanstewart/Documents/GitHub/final-project-whitnotmax/.derivedData/Build/Intermediates.noindex/final-project.build/Debug-iphoneos/PinPointWidgetExtension.build/Objects-normal/arm64/PinPointWidgetControl~partial.swiftmodule"
   }
 }

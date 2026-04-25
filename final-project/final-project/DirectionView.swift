@@ -56,7 +56,12 @@ struct DirectionView: View {
                     )
                     .padding(.top, 80)
                 } else {
-                    compassCard
+                    if locationStore.shouldShowLocationNotice {
+                        LocationNoticeCard()
+                    } else {
+                        compassCard
+                    }
+
                     Button {
                         if let activeSpot {
                             locationStore.openInMaps(for: activeSpot)
@@ -82,6 +87,7 @@ struct DirectionView: View {
             // This screen opts into a more responsive tracking mode so the arrow and distance
             // update smoothly as the user walks. Other screens stay on the lighter one-shot flow.
             displayedArrowRotation = compassArrowRotation
+            locationStore.requestWhenInUsePermission()
             locationStore.beginGuidanceTracking()
             isNearbyPulseExpanded = true
         }

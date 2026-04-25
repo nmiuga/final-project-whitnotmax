@@ -46,16 +46,24 @@
         "comment": "",
         "key": "Save This Location",
         "location": {
-          "startingColumn": 56,
-          "startingLine": 244
+          "startingColumn": 64,
+          "startingLine": 252
         }
       },
       {
         "comment": "",
         "key": "Update Quick Spot",
         "location": {
-          "startingColumn": 79,
-          "startingLine": 244
+          "startingColumn": 87,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saving...",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 249
         }
       },
       {
@@ -63,7 +71,7 @@
         "key": "Clear",
         "location": {
           "startingColumn": 27,
-          "startingLine": 262
+          "startingLine": 279
         }
       },
       {
@@ -71,7 +79,7 @@
         "key": "Quick Spot",
         "location": {
           "startingColumn": 18,
-          "startingLine": 275
+          "startingLine": 292
         }
       },
       {
@@ -79,7 +87,7 @@
         "key": "You are currently %@ away.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 289
+          "startingLine": 306
         }
       },
       {
@@ -87,7 +95,7 @@
         "key": "When you park, open the app and tap Save This Location. PinPoint will remember the exact spot so you can walk back later.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 328
+          "startingLine": 345
         }
       },
       {
@@ -95,7 +103,7 @@
         "key": "No quick spot yet",
         "location": {
           "startingColumn": 22,
-          "startingLine": 309
+          "startingLine": 326
         }
       },
       {
@@ -103,7 +111,7 @@
         "key": "Places",
         "location": {
           "startingColumn": 30,
-          "startingLine": 433
+          "startingLine": 454
         }
       },
       {
@@ -111,7 +119,7 @@
         "key": "Saved Places",
         "location": {
           "startingColumn": 29,
-          "startingLine": 409
+          "startingLine": 430
         }
       },
       {
@@ -119,7 +127,7 @@
         "key": "Use this tab for saved trailheads, meet-up points, parking decks, or any location you want to come back to later.",
         "location": {
           "startingColumn": 30,
-          "startingLine": 375
+          "startingLine": 387
         }
       },
       {
@@ -127,7 +135,7 @@
         "key": "Save Current Location",
         "location": {
           "startingColumn": 35,
-          "startingLine": 382
+          "startingLine": 394
         }
       },
       {
@@ -135,7 +143,7 @@
         "key": "Save a few locations here so the app stays flexible without cluttering the quick-save experience.",
         "location": {
           "startingColumn": 47,
-          "startingLine": 404
+          "startingLine": 425
         }
       },
       {
@@ -143,7 +151,7 @@
         "key": "No Saved Places",
         "location": {
           "startingColumn": 29,
-          "startingLine": 402
+          "startingLine": 423
         }
       },
       {
@@ -151,7 +159,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 43,
-          "startingLine": 418
+          "startingLine": 439
         }
       },
       {
@@ -159,7 +167,7 @@
         "key": "Maps",
         "location": {
           "startingColumn": 43,
-          "startingLine": 425
+          "startingLine": 446
         }
       },
       {
@@ -167,7 +175,7 @@
         "key": "Save Place",
         "location": {
           "startingColumn": 30,
-          "startingLine": 585
+          "startingLine": 611
         }
       },
       {
@@ -175,7 +183,7 @@
         "key": "Place Name",
         "location": {
           "startingColumn": 25,
-          "startingLine": 549
+          "startingLine": 565
         }
       },
       {
@@ -183,7 +191,7 @@
         "key": "Icon",
         "location": {
           "startingColumn": 25,
-          "startingLine": 557
+          "startingLine": 573
         }
       },
       {
@@ -191,7 +199,7 @@
         "key": "Leave this empty to use the default pin icon. Tap Custom to jump to the emoji keyboard.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 574
+          "startingLine": 590
         }
       },
       {
@@ -199,7 +207,7 @@
         "key": "This saves your current GPS location into the Places tab so you can guide yourself back to it later.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 580
+          "startingLine": 596
         }
       },
       {
@@ -207,7 +215,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 28,
-          "startingLine": 589
+          "startingLine": 615
         }
       },
       {
@@ -215,7 +223,7 @@
         "key": "Save",
         "location": {
           "startingColumn": 28,
-          "startingLine": 595
+          "startingLine": 622
         }
       },
       {
@@ -223,7 +231,7 @@
         "key": "Custom",
         "location": {
           "startingColumn": 30,
-          "startingLine": 649
+          "startingLine": 680
         }
       },
       {
@@ -231,7 +239,7 @@
         "key": "Default",
         "location": {
           "startingColumn": 30,
-          "startingLine": 664
+          "startingLine": 695
         }
       }
     ]
