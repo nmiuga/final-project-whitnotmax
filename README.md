@@ -11,17 +11,16 @@ Key features include:
 - One-tap `Quick Save` for fast location capture
 - A `Places` tab for saving and managing multiple locations
 - AirTag-like guidance back to a saved spot
-- Clear feedback when location permissions are unavailable
 - Home Screen widgets for quick access to saving and guiding
-- Dark mode support
 
 ## Screenshots
 
-Add your screenshots to an `assets/` folder at the root of the repo, then replace these placeholders with your final images.
 
-![Quick Save screen](assets/screenshot1.png)
-![Places screen](assets/screenshot2.png)
-![Guide screen](assets/screenshot3.png)
+<p align="center">
+  <img src="assets/screenshot1.png" alt="Guide screen" width="200">
+  <img src="assets/screenshot2.png" alt="Quick Save screen" width="200">
+  <img src="assets/screenshot3.png" alt="Places screen" width="200">
+</p>
 
 ## Setup
 
@@ -30,13 +29,4 @@ Add your screenshots to an `assets/` folder at the root of the repo, then replac
 3. Allow location access when prompted so PinPoint can save and guide to locations.
 4. If testing widgets, run the app once first and then add the widgets from the Home Screen widget gallery.
 
-## Project Structure
 
-- `final-project/` contains the Xcode project and app source code
-- `prompt.md` documents the AI prompt used to generate the initial version of the app
-- `edits.md` lists the manual changes made after generation
-- `reflection.md` contains a short reflection on the process
-
-## Notes
-
-This project was developed through a combination of AI-assisted generation and manual refinement. The final app reflects both the generated starting point and the design, debugging, and usability improvements made afterward.
