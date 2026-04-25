@@ -16,9 +16,11 @@ Key features include:
 ## Screenshots
 
 
-![Quick Save screen](assets/screenshot1.png){width=50%}
-![Places screen](assets/screenshot2.png){width=50%}
-![Guide screen](assets/screenshot3.png){width=50%}
+<p align="center">
+  <img src="assets/screenshot1.png" alt="Guide screen" width="260">
+  <img src="assets/screenshot2.png" alt="Quick Save screen" width="260">
+  <img src="assets/screenshot3.png" alt="Places screen" width="260">
+</p>
 
 ## Setup
 
