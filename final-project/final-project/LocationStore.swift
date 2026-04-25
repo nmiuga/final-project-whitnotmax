@@ -34,6 +34,7 @@ final class LocationStore: NSObject, ObservableObject {
     static let appGroupIdentifier = "group.whitmans.final-project"
     static let quickSpotStorageKey = "quickSpot"
     static let savedPlacesStorageKey = "savedPlaces"
+    static let debugSlowSaveKey = "debugSimulateSlowSave"
 
     // MARK: Published state used by the SwiftUI views
     //
@@ -55,6 +56,11 @@ final class LocationStore: NSObject, ObservableObject {
     @Published var activeGuidanceSpot: SavedSpot?
     @Published private(set) var pendingSaveDescription: String?
     @Published private(set) var successfulSaveCount = 0
+    @Published var debugSimulateSlowSave: Bool {
+        didSet {
+            storageDefaults.set(debugSimulateSlowSave, forKey: Self.debugSlowSaveKey)
+        }
+    }
 
     // `CLLocationManager` is Apple's main GPS / compass manager.
     // It talks to the system, asks permission, and delivers location + heading updates
@@ -66,10 +72,13 @@ final class LocationStore: NSObject, ObservableObject {
     // can restore exactly what it needs when the app relaunches.
     private var pendingLaunchAction: LaunchAction?
     private var pendingSaveRequest: SaveRequest?
+    private var pendingSaveReadyAfter: Date?
+    private var pendingSaveDelayTask: Task<Void, Never>?
     private var isGuidanceTrackingActive = false
 
     override init() {
         storageDefaults = UserDefaults(suiteName: Self.appGroupIdentifier) ?? .standard
+        debugSimulateSlowSave = storageDefaults.bool(forKey: Self.debugSlowSaveKey)
 
         // We capture the current authorization status immediately so the UI can render
         // the right state before the first delegate callback happens.
@@ -518,13 +527,29 @@ final class LocationStore: NSObject, ObservableObject {
 
         // If the latest reading is still very fresh, save immediately. Otherwise, wait for the
         // next Core Location callback so the saved coordinate is closer to the moment of the tap.
-        if let location = resolvedCurrentLocation, isFreshEnoughForImmediateSave(location) {
+        if !debugSimulateSlowSave, let location = resolvedCurrentLocation, isFreshEnoughForImmediateSave(location) {
             commitSaveRequest(request, with: location)
             return
         }
 
         pendingSaveRequest = request
+        pendingSaveReadyAfter = debugSimulateSlowSave ? Date().addingTimeInterval(2.5) : nil
         pendingSaveDescription = savePendingDescription(for: request)
+        pendingSaveDelayTask?.cancel()
+
+        if debugSimulateSlowSave {
+            pendingSaveDelayTask = Task { @MainActor in
+                try? await Task.sleep(for: .seconds(2.5))
+                guard let pendingSaveRequest else { return }
+                if let location = resolvedCurrentLocation {
+                    commitSaveRequest(pendingSaveRequest, with: location)
+                    self.pendingSaveRequest = nil
+                } else {
+                    refreshLocation()
+                }
+            }
+        }
+
         locationManager.requestLocation()
         if CLLocationManager.headingAvailable() {
             locationManager.startUpdatingHeading()
@@ -536,6 +561,10 @@ final class LocationStore: NSObject, ObservableObject {
         if currentLocation == nil {
             currentLocation = location
         }
+
+        pendingSaveDelayTask?.cancel()
+        pendingSaveDelayTask = nil
+        pendingSaveReadyAfter = nil
 
         switch request {
         case .quickSpot:
@@ -665,8 +694,12 @@ extension LocationStore: CLLocationManagerDelegate {
             if let pendingSaveRequest {
                 // If a save was waiting on a fresher sample, this callback is exactly what we wanted.
                 // Use the newest location delivered after the tap rather than an older cached reading.
-                commitSaveRequest(pendingSaveRequest, with: location)
-                self.pendingSaveRequest = nil
+                let isReadyToCommit = pendingSaveReadyAfter.map { Date() >= $0 } ?? true
+
+                if isReadyToCommit {
+                    commitSaveRequest(pendingSaveRequest, with: location)
+                    self.pendingSaveRequest = nil
+                }
             }
 
             if !completedPendingSave {
@@ -690,7 +723,10 @@ extension LocationStore: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
+            pendingSaveDelayTask?.cancel()
+            pendingSaveDelayTask = nil
             pendingSaveRequest = nil
+            pendingSaveReadyAfter = nil
             pendingSaveDescription = nil
             statusMessage = "Could not update your location: \(error.localizedDescription)"
         }

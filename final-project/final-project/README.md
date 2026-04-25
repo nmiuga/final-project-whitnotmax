@@ -11,13 +11,10 @@ Key features include:
 - One-tap `Quick Save` for fast location capture
 - A `Places` tab for saving and managing multiple locations
 - AirTag-like guidance back to a saved spot
-- Clear feedback when location permissions are unavailable
 - Home Screen widgets for quick access to saving and guiding
-- Dark mode support
 
 ## Screenshots
 
-Add your screenshots to an `assets/` folder at the root of the repo, then replace these placeholders with your final images.
 
 ![Quick Save screen](assets/screenshot1.png)
 ![Places screen](assets/screenshot2.png)
@@ -37,6 +34,3 @@ Add your screenshots to an `assets/` folder at the root of the repo, then replac
 - `edits.md` lists the manual changes made after generation
 - `reflection.md` contains a short reflection on the process
 
-## Notes
-
-This project was developed through a combination of AI-assisted generation and manual refinement. The final app reflects both the generated starting point and the design, debugging, and usability improvements made afterward.

@@ -116,6 +116,13 @@ struct QuickSaveView: View {
             .background(screenBackground.ignoresSafeArea())
             .navigationTitle("PinPoint")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+#if DEBUG
+                ToolbarItem(placement: .topBarTrailing) {
+                    debugSaveDelayMenu
+                }
+#endif
+            }
             .onAppear {
                 locationStore.requestWhenInUsePermission()
                 locationStore.refreshLocation()
@@ -264,13 +271,6 @@ struct QuickSaveView: View {
             }
             .disabled(!canSave || locationStore.isWaitingForQuickSave)
 
-            if locationStore.isWaitingForQuickSave, let pendingSaveDescription = locationStore.pendingSaveDescription {
-                Text(pendingSaveDescription)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
             HStack(spacing: 12) {
                 
                 Button(role: .destructive) {
@@ -372,6 +372,17 @@ struct QuickSaveView: View {
             )
         }
     }
+
+#if DEBUG
+    private var debugSaveDelayMenu: some View {
+        Menu {
+            Toggle("Simulate slow GPS save", isOn: $locationStore.debugSimulateSlowSave)
+        } label: {
+            Image(systemName: locationStore.debugSimulateSlowSave ? "ladybug.fill" : "ladybug")
+                .foregroundStyle(locationStore.debugSimulateSlowSave ? .orange : .secondary)
+        }
+    }
+#endif
 }
 
 struct SavedPlacesView: View {
@@ -452,6 +463,13 @@ struct SavedPlacesView: View {
                 }
             }
             .navigationTitle("Places")
+            .toolbar {
+#if DEBUG
+                ToolbarItem(placement: .topBarTrailing) {
+                    debugSaveDelayMenu
+                }
+#endif
+            }
             .scrollContentBackground(.hidden)
             .background(
                 LinearGradient(
@@ -479,6 +497,17 @@ struct SavedPlacesView: View {
             }
         }
     }
+
+#if DEBUG
+    private var debugSaveDelayMenu: some View {
+        Menu {
+            Toggle("Simulate slow GPS save", isOn: $locationStore.debugSimulateSlowSave)
+        } label: {
+            Image(systemName: locationStore.debugSimulateSlowSave ? "ladybug.fill" : "ladybug")
+                .foregroundStyle(locationStore.debugSimulateSlowSave ? .orange : .secondary)
+        }
+    }
+#endif
 }
 
 struct SavedPlaceRow: View {
@@ -598,15 +627,6 @@ struct AddPlaceSheet: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if locationStore.isWaitingForPlaceSave {
-                    Section {
-                        HStack(spacing: 12) {
-                            ProgressView()
-                            Text(locationStore.pendingSaveDescription ?? "Refreshing your location before saving.")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
             }
             .navigationTitle("Save Place")
             .navigationBarTitleDisplayMode(.inline)
@@ -619,8 +639,20 @@ struct AddPlaceSheet: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button {
                         locationStore.saveCurrentLocationToPlaces(named: placeName, iconEmoji: placeEmoji)
+                    } label: {
+                        if locationStore.isWaitingForPlaceSave {
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                Text("Saving...")
+                            }
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Color.accentColor)
+                            .tint(Color.accentColor)
+                        } else {
+                            Text("Save")
+                        }
                     }
                     .disabled(!locationStore.canSaveCurrentLocation || locationStore.isWaitingForPlaceSave)
                 }
