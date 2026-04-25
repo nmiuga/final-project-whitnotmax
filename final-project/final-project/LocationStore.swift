@@ -26,6 +26,11 @@ final class LocationStore: NSObject, ObservableObject {
         case guideQuickSpot
     }
 
+    private enum SaveRequest {
+        case quickSpot
+        case place(name: String, iconEmoji: String)
+    }
+
     static let appGroupIdentifier = "group.whitmans.final-project"
     static let quickSpotStorageKey = "quickSpot"
     static let savedPlacesStorageKey = "savedPlaces"
@@ -58,6 +63,8 @@ final class LocationStore: NSObject, ObservableObject {
     // We persist the quick-save spot and the multi-place list separately so each part of the UI
     // can restore exactly what it needs when the app relaunches.
     private var pendingLaunchAction: LaunchAction?
+    private var pendingSaveRequest: SaveRequest?
+    private var isGuidanceTrackingActive = false
 
     override init() {
         storageDefaults = UserDefaults(suiteName: Self.appGroupIdentifier) ?? .standard
@@ -74,15 +81,7 @@ final class LocationStore: NSObject, ObservableObject {
         // The location manager sends updates back to this object via CLLocationManagerDelegate.
         locationManager.delegate = self
 
-        // "Nearest ten meters" is a reasonable tradeoff for this app:
-        // accurate enough to help someone find their car, without asking for maximum GPS cost.
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-
-        // Ignore tiny movement changes so we do not over-update the UI while the user is standing still.
-        locationManager.distanceFilter = 5
-
-        // Only report heading changes once the phone turns at least 5 degrees.
-        locationManager.headingFilter = 5
+        configureStandardTracking()
     }
 
     var canSaveCurrentLocation: Bool {
@@ -170,6 +169,11 @@ final class LocationStore: NSObject, ObservableObject {
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
         formatter.unitStyle = .medium
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = 0
+        formatter.numberFormatter = numberFormatter
 
         // Keep nearby values in meters, but switch to kilometers once the distance gets larger.
         // That makes the readout feel natural and easy to scan.
@@ -180,6 +184,30 @@ final class LocationStore: NSObject, ObservableObject {
             let value = Measurement(value: meters, unit: UnitLength.meters)
             return formatter.string(from: value)
         }
+    }
+
+    func guidanceDistanceText(to spot: SavedSpot?) -> String? {
+        guard let currentLocation, let spot else { return nil }
+
+        let meters = currentLocation.distance(from: spot.location)
+
+        // Once the user is inside the phone's practical GPS fuzziness zone, a precise meter
+        // readout starts to feel overconfident. Switching to a softer label makes the guidance
+        // experience feel more trustworthy.
+        let proximityThreshold = max(15.0, currentLocation.horizontalAccuracy)
+        if meters <= proximityThreshold {
+            return "You're Nearby"
+        }
+
+        return distanceText(to: spot)
+    }
+
+    func isWithinGuidanceProximityZone(for spot: SavedSpot?) -> Bool {
+        guard let currentLocation, let spot else { return false }
+
+        let meters = currentLocation.distance(from: spot.location)
+        let proximityThreshold = max(15.0, currentLocation.horizontalAccuracy)
+        return meters <= proximityThreshold
     }
 
     func directionHint(to spot: SavedSpot?) -> String? {
@@ -241,6 +269,12 @@ final class LocationStore: NSObject, ObservableObject {
             return
         }
 
+        guard !isGuidanceTrackingActive else {
+            // The guidance screen owns a more aggressive continuous tracking mode.
+            // If it is active, we do not want background pages to downgrade it back to one-shot updates.
+            return
+        }
+
         // Pull in the most recent system-known coordinate right away if one exists.
         // This gives the save buttons something usable even if a fresh GPS callback has not
         // arrived yet after the app comes back on screen.
@@ -256,26 +290,47 @@ final class LocationStore: NSObject, ObservableObject {
         }
     }
 
-    func saveQuickSpot() {
-        guard let currentLocation = prepareLocationForSave() else {
+    func beginGuidanceTracking() {
+        guard isAuthorized else {
+            requestWhenInUsePermission()
             return
         }
 
-        // The quick-save flow intentionally uses a fixed default name so the user can
-        // save with one tap and move on. No extra prompts, no extra friction.
-        let spot = SavedSpot(
-            name: "Saved Spot",
-            iconEmoji: nil,
-            latitude: currentLocation.coordinate.latitude,
-            longitude: currentLocation.coordinate.longitude,
-            timestamp: .now
-        )
-        quickSpot = spot
+        isGuidanceTrackingActive = true
 
-        // Persist the quick spot so it survives app relaunches.
-        SavedSpotStorage.save(spot, forKey: Self.quickSpotStorageKey, defaults: storageDefaults)
-        statusMessage = "Saved your quick spot."
-        reloadWidgetTimelines()
+        // The guidance screen is the one place where responsiveness matters more than battery cost.
+        // We temporarily switch to a finer-grained GPS stream so the distance and arrow keep up
+        // as the user walks back toward the saved spot.
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+        locationManager.requestLocation()
+
+        if CLLocationManager.headingAvailable() {
+            locationManager.startUpdatingHeading()
+        }
+    }
+
+    func endGuidanceTracking() {
+        guard isGuidanceTrackingActive else { return }
+
+        isGuidanceTrackingActive = false
+        configureStandardTracking()
+
+        // Shut down the continuous guidance streams once the screen goes away so the rest
+        // of the app returns to the lighter-weight "refresh on demand" behavior.
+        locationManager.stopUpdatingLocation()
+        locationManager.stopUpdatingHeading()
+
+        // Grab one final cached location so other screens still have something recent to show
+        // without immediately re-entering continuous tracking.
+        if let cachedLocation = locationManager.location {
+            currentLocation = cachedLocation
+        }
+    }
+
+    func saveQuickSpot() {
+        performSaveRequest(.quickSpot)
     }
 
     func clearQuickSpot() {
@@ -286,26 +341,16 @@ final class LocationStore: NSObject, ObservableObject {
     }
 
     func saveCurrentLocationToPlaces(named rawName: String, iconEmoji rawIconEmoji: String) {
-        guard let currentLocation = prepareLocationForSave() else {
-            return
-        }
-
         // The list-based flow is more flexible, so we accept a custom name.
         // If the user leaves it blank, we generate a simple timestamp-based fallback.
         let trimmedName = rawName.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedIconEmoji = rawIconEmoji.trimmingCharacters(in: .whitespacesAndNewlines)
-        let spot = SavedSpot(
-            name: trimmedName.isEmpty ? defaultPlaceName() : trimmedName,
-            iconEmoji: trimmedIconEmoji.isEmpty ? nil : String(trimmedIconEmoji.prefix(1)),
-            latitude: currentLocation.coordinate.latitude,
-            longitude: currentLocation.coordinate.longitude,
-            timestamp: .now
+        performSaveRequest(
+            .place(
+                name: trimmedName.isEmpty ? defaultPlaceName() : trimmedName,
+                iconEmoji: trimmedIconEmoji.isEmpty ? "" : String(trimmedIconEmoji.prefix(1))
+            )
         )
-
-        // Insert at the top so the most recently added places are easiest to reach.
-        savedPlaces.insert(spot, at: 0)
-        SavedSpotStorage.saveArray(savedPlaces, forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
-        statusMessage = "Saved \(spot.name)."
     }
 
     func deleteSavedPlace(_ spot: SavedSpot) {
@@ -372,16 +417,23 @@ final class LocationStore: NSObject, ObservableObject {
     private func startUpdating() {
         // `startUpdatingLocation()` keeps the GPS stream alive so distance changes
         // update automatically as the user walks.
-        locationManager.startUpdatingLocation()
-
-        // We also request an immediate one-shot update so the UI does not have to wait
-        // for the next periodic GPS callback.
-        locationManager.requestLocation()
-
-        if CLLocationManager.headingAvailable() {
-            // Heading updates power the rotating arrow in the guidance screen.
-            locationManager.startUpdatingHeading()
+        if isGuidanceTrackingActive {
+            beginGuidanceTracking()
+        } else {
+            refreshLocation()
         }
+    }
+
+    private func configureStandardTracking() {
+        // "Nearest ten meters" is a reasonable tradeoff for the main app:
+        // accurate enough to save a place, without keeping a high-power GPS stream active.
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+
+        // Ignore tiny movement changes so we do not over-update the UI while the user is standing still.
+        locationManager.distanceFilter = 5
+
+        // Only report heading changes once the phone turns at least 5 degrees.
+        locationManager.headingFilter = 5
     }
 
     private func processPendingLaunchAction() {
@@ -424,27 +476,69 @@ final class LocationStore: NSObject, ObservableObject {
         currentLocation ?? locationManager.location
     }
 
-    private func prepareLocationForSave() -> CLLocation? {
+    private func performSaveRequest(_ request: SaveRequest) {
         guard isAuthorized else {
             requestWhenInUsePermission()
             statusMessage = "Allow location access so PinPoint can save this place."
-            return nil
+            return
         }
 
-        // Prefer the published location we already showed to SwiftUI, but fall back to the
-        // manager's most recent cached reading on real devices when that is all we have so far.
-        if let location = resolvedCurrentLocation {
-            if currentLocation == nil {
-                currentLocation = location
-            }
-            return location
+        // If the latest reading is still very fresh, save immediately. Otherwise, wait for the
+        // next Core Location callback so the saved coordinate is closer to the moment of the tap.
+        if let location = resolvedCurrentLocation, isFreshEnoughForImmediateSave(location) {
+            commitSaveRequest(request, with: location)
+            return
         }
 
-        // If nothing is available yet, proactively ask Core Location for a fresh sample so the
-        // next tap should succeed without the user needing to navigate away and back.
-        refreshLocation()
-        statusMessage = "Waiting for your current location. Give it a second and try again."
-        return nil
+        pendingSaveRequest = request
+        locationManager.requestLocation()
+        if CLLocationManager.headingAvailable() {
+            locationManager.startUpdatingHeading()
+        }
+        statusMessage = "Refreshing your location before saving."
+    }
+
+    private func commitSaveRequest(_ request: SaveRequest, with location: CLLocation) {
+        if currentLocation == nil {
+            currentLocation = location
+        }
+
+        switch request {
+        case .quickSpot:
+            // The quick-save flow intentionally uses a fixed default name so the user can
+            // save with one tap and move on. No extra prompts, no extra friction.
+            let spot = SavedSpot(
+                name: "Saved Spot",
+                iconEmoji: nil,
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                timestamp: .now
+            )
+            quickSpot = spot
+            SavedSpotStorage.save(spot, forKey: Self.quickSpotStorageKey, defaults: storageDefaults)
+            statusMessage = "Saved your quick spot."
+            reloadWidgetTimelines()
+
+        case let .place(name, iconEmoji):
+            let spot = SavedSpot(
+                name: name,
+                iconEmoji: iconEmoji.isEmpty ? nil : iconEmoji,
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                timestamp: .now
+            )
+            savedPlaces.insert(spot, at: 0)
+            SavedSpotStorage.saveArray(savedPlaces, forKey: Self.savedPlacesStorageKey, defaults: storageDefaults)
+            statusMessage = "Saved \(spot.name)."
+        }
+    }
+
+    private func isFreshEnoughForImmediateSave(_ location: CLLocation) -> Bool {
+        // "Exact at the moment of tap" is not something GPS can guarantee, but we can at least
+        // insist on a location sample that is both recent and reasonably accurate before saving
+        // immediately. If not, we wait for the next callback after the button press.
+        let age = Date().timeIntervalSince(location.timestamp)
+        return age <= 2 && location.horizontalAccuracy >= 0 && location.horizontalAccuracy <= 35
     }
 
     private func openAppSettings() {
@@ -500,7 +594,11 @@ extension LocationStore: CLLocationManagerDelegate {
 
             if isAuthorized {
                 statusMessage = "Location is active."
-                startUpdating()
+                if isGuidanceTrackingActive {
+                    beginGuidanceTracking()
+                } else {
+                    refreshLocation()
+                }
             } else if manager.authorizationStatus == .denied {
                 statusMessage = "Location access is denied. Enable it in Settings to use PinPoint."
             }
@@ -516,10 +614,21 @@ extension LocationStore: CLLocationManagerDelegate {
 
         Task { @MainActor in
             currentLocation = location
-            if quickSpot != nil || !savedPlaces.isEmpty {
-                statusMessage = "Tracking your distance to saved locations."
-            } else {
-                statusMessage = "Current location updated."
+            let completedPendingSave = pendingSaveRequest != nil
+
+            if let pendingSaveRequest {
+                // If a save was waiting on a fresher sample, this callback is exactly what we wanted.
+                // Use the newest location delivered after the tap rather than an older cached reading.
+                commitSaveRequest(pendingSaveRequest, with: location)
+                self.pendingSaveRequest = nil
+            }
+
+            if !completedPendingSave {
+                if quickSpot != nil || !savedPlaces.isEmpty {
+                    statusMessage = "Tracking your distance to saved locations."
+                } else {
+                    statusMessage = "Current location updated."
+                }
             }
 
             processPendingLaunchAction()

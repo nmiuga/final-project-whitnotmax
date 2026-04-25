@@ -36,30 +36,6 @@
       },
       {
         "comment": "",
-        "key": "Quick Save",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 117
-        }
-      },
-      {
-        "comment": "",
-        "key": "Tap to open the app and save this place immediately.",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 121
-        }
-      },
-      {
-        "comment": "",
-        "key": "Last saved %@",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 127
-        }
-      },
-      {
-        "comment": "",
         "key": "PinPoint",
         "location": {
           "startingColumn": 22,
@@ -68,26 +44,26 @@
       },
       {
         "comment": "",
-        "key": "No Quick Spot",
+        "key": "Quick Save",
         "location": {
           "startingColumn": 22,
-          "startingLine": 171
+          "startingLine": 118
         }
       },
       {
         "comment": "",
-        "key": "Save a quick spot in PinPoint first, then this widget will take you back to it.",
+        "key": "Tap to save Quick Spot.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 175
+          "startingLine": 124
         }
       },
       {
         "comment": "",
-        "key": "Guide Me",
+        "key": "No quick spot yet",
         "location": {
-          "startingColumn": 22,
-          "startingLine": 156
+          "startingColumn": 18,
+          "startingLine": 160
         }
       },
       {
@@ -95,7 +71,39 @@
         "key": "Saved %@",
         "location": {
           "startingColumn": 22,
-          "startingLine": 167
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "No Quick Spot",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 208
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save a quick spot in PinPoint first, then this widget will take you back to it.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "Guide Me",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 188
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saved %@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 202
         }
       },
       {
@@ -103,7 +111,7 @@
         "key": "Guide",
         "location": {
           "startingColumn": 22,
-          "startingLine": 148
+          "startingLine": 180
         }
       }
     ]

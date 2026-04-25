@@ -486,12 +486,6 @@ struct SavedPlaceRow: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            if let hint = locationStore.directionHint(to: spot) {
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
         }
         .padding(.vertical, 4)
     }
