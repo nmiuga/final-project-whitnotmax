@@ -16,9 +16,9 @@ Key features include:
 ## Screenshots
 
 
-![Quick Save screen](assets/screenshot1.png)
-![Places screen](assets/screenshot2.png)
-![Guide screen](assets/screenshot3.png)
+![Quick Save screen](assets/screenshot1.png){width=50%}
+![Places screen](assets/screenshot2.png){width=50%}
+![Guide screen](assets/screenshot3.png){width=50%}
 
 ## Setup
 
