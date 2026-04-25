@@ -367,11 +367,6 @@ struct SavedPlacesView: View {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
-                        if locationStore.shouldShowLocationNotice {
-                            LocationNoticeCard(compact: true)
-                                .padding(.bottom, 8)
-                        }
-
                         Text("Use this tab for saved trailheads, meet-up points, parking decks, or any location you want to come back to later.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)

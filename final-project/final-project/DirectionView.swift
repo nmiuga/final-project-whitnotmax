@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DirectionView: View {
     @EnvironmentObject private var locationStore: LocationStore
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     @State private var displayedArrowRotation = 0.0
     @State private var isNearbyPulseExpanded = false
@@ -39,6 +40,11 @@ struct DirectionView: View {
         locationStore.isWithinGuidanceProximityZone(for: activeSpot)
     }
 
+    private var isGuidingQuickSpot: Bool {
+        guard let activeSpot else { return false }
+        return activeSpot.id == locationStore.quickSpot?.id
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -63,7 +69,8 @@ struct DirectionView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(Color.accentColor)
                     .padding(.top, 6)
-                    
+
+                    deleteButton
                 }
             }
             .padding(20)
@@ -172,6 +179,31 @@ struct DirectionView: View {
         .padding(24)
         .frame(maxWidth: .infinity)
         .background(cardFillColor, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+    }
+
+    private var deleteButton: some View {
+        Button(role: .destructive) {
+            guard let activeSpot else { return }
+
+            if isGuidingQuickSpot {
+                locationStore.clearQuickSpot()
+            } else {
+                locationStore.deleteSavedPlace(activeSpot)
+            }
+
+            locationStore.activeGuidanceSpot = nil
+            dismiss()
+        } label: {
+            Label(
+                isGuidingQuickSpot ? "Delete Quick Spot" : "Delete Saved Place",
+                systemImage: "trash"
+            )
+            .font(.subheadline)
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.red)
+        .padding(.top, 26)
     }
 
     private var nearbyPulseGraphic: some View {
