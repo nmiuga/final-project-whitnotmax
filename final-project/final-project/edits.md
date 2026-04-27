@@ -5,3 +5,5 @@
 5. Created an app icon and changed the title that shows below the app.
 6. Added dark mode support
 7. Added two home screen widgets to allow easy access to the quick saving functionality.
+8. Polished UI
+9. Improved accuracy of location saving
