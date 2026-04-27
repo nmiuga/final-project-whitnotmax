@@ -527,7 +527,7 @@ final class LocationStore: NSObject, ObservableObject {
 
         // If the latest reading is still very fresh, save immediately. Otherwise, wait for the
         // next Core Location callback so the saved coordinate is closer to the moment of the tap.
-        if !debugSimulateSlowSave, let location = resolvedCurrentLocation, isFreshEnoughForImmediateSave(location) {
+        if !debugSimulateSlowSave, let location = resolvedCurrentLocation, isFreshEnoughForImmediateSave(location, for: request) {
             commitSaveRequest(request, with: location)
             return
         }
@@ -599,12 +599,21 @@ final class LocationStore: NSObject, ObservableObject {
         successfulSaveCount += 1
     }
 
-    private func isFreshEnoughForImmediateSave(_ location: CLLocation) -> Bool {
+    private func isFreshEnoughForImmediateSave(_ location: CLLocation, for request: SaveRequest) -> Bool {
         // "Exact at the moment of tap" is not something GPS can guarantee, but we can at least
         // insist on a location sample that is both recent and reasonably accurate before saving
         // immediately. If not, we wait for the next callback after the button press.
         let age = Date().timeIntervalSince(location.timestamp)
-        return age <= 2 && location.horizontalAccuracy >= 0 && location.horizontalAccuracy <= 35
+        let staleTimeLimit: TimeInterval
+
+        switch request {
+        case .quickSpot:
+            staleTimeLimit = 10
+        case .place:
+            staleTimeLimit = 20
+        }
+
+        return age <= staleTimeLimit && location.horizontalAccuracy >= 0 && location.horizontalAccuracy <= 35
     }
 
     private func savePendingDescription(for request: SaveRequest) -> String {
